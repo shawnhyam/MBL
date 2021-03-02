@@ -8,10 +8,10 @@
 import Foundation
 
 
-let globals = Set<Variable>(arrayLiteral: "-", "=")
+let globals = Set<Variable>(arrayLiteral: "-", "=", "time")
 
 struct CompileEnv {
-    var global: [String] = ["-", "="]
+    var global: [String] = ["-", "=", "time"]
     var local: [String] = []
     var free: [String] = []
 }
@@ -23,7 +23,7 @@ extension Expr {
         case .lit(_, _):
             return []
         case let .var(v, _):
-            if (v == "-") || (v == "=") { return [] }
+            if globals.contains(v) { return [] }
             return bound.contains(v) ? [] : [v]
         case .cond(_, _, _, _):
             fatalError()
@@ -78,9 +78,9 @@ extension Expr {
         case let .var(name, _):
             program.append(compileRefer(name, env))
             
-        case let .let(name, binding, body, tag):
+        case let .let(names, bindings, body, tag):
             // inefficient, but rewrite let into lambda and apply
-            Expr.app(.abs([name], body, tag), [binding], tag).compile(env, &program)
+            Expr.app(.abs(names, body, tag), bindings, tag).compile(env, &program)
 
         case let .abs(vars, body, _):
             let free = Array(body.findFree(Set(vars).union(globals)))

@@ -16,7 +16,7 @@ indirect enum Expr<Tag> {
     case abs([Variable], Expr, Tag)
     case set(Variable, Expr, Tag)
     case app(Expr, [Expr], Tag)
-    case `let`(Variable, Expr, Expr, Tag)
+    case `let`([Variable], [Expr], Expr, Tag)
     case seq([Expr], Tag)
 }
 
@@ -56,8 +56,8 @@ extension Expr {
             return .set(v, expr.untag(), ())
         case let .app(fn, args, _):
             return .app(fn.untag(), args.map { $0.untag() }, ())
-        case let .let(v, binding, body, _):
-            return .let(v, binding.untag(), body.untag(), ())
+        case let .let(vars, bindings, body, _):
+            return .let(vars, bindings.map { $0.untag() }, body.untag(), ())
         case let .seq(exprs, _):
             return .seq(exprs.map { $0.untag() }, ())
 
@@ -81,8 +81,8 @@ extension Expr where Tag == Void {
             return .set(v, expr._tag(&n), n)
         case let .app(fn, args, ()):
             return .app(fn._tag(&n), args.map { $0._tag(&n) }, n)
-        case let .let(v, binding, body, ()):
-            return .let(v, binding._tag(&n), body._tag(&n), n)
+        case let .let(vars, bindings, body, ()):
+            return .let(vars, bindings.map { $0._tag(&n) }, body._tag(&n), n)
         case let .seq(exprs, ()):
             return .seq(exprs.map { $0._tag(&n) }, n)
         }

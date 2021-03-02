@@ -32,12 +32,31 @@ extension Inferencer {
     // fv = hashtable of known free variables
     mutating func annotate(_ e: Ex) {
         let _tv = nextTypeVar()
-        var table: [Variable: Type] = [
+
+        var freeVariables: [Variable: Type] = [
             "=": .arrow([_tv, _tv, .bool]),   // probably need a fresh type variable every time
             "+": .arrow([.int, .int, .int]),
             "-": .arrow([.int, .int, .int]),
-            "*": .arrow([.int, .int, .int])
+            "*": .arrow([.int, .int, .int]),
+            "time": .arrow([.int])
         ]
+
+        func fresh(_ t: Type, _ subst: inout [Type.Id: Type.Id]) -> Type {
+            switch t {
+            case let .var(id):
+                if let t = subst[id] {
+                    return .var(t)
+                } else {
+                    guard case let .var(t) = nextTypeVar() else { fatalError() }
+                    subst[id] = t
+                    return .var(t)
+                }
+            case .int, .bool:
+                return t
+            case let .arrow(types):
+                return .arrow(types.map { fresh($0, &subst) })
+            }
+        }
         
         @discardableResult
         func annotate_(_ e: Ex, _ bv: [(Variable, Type)]) -> Type {
@@ -50,12 +69,13 @@ extension Inferencer {
                 if let a = bv.first(where: { $0.0 == x })?.1 {
                     annotations[tag] = a
                     return a
-                } else if let a = table[x] {
-                    annotations[tag] = a
+                } else if let a = freeVariables[x] {
+                    var subst: [Type.Id: Type.Id] = [:]
+                    annotations[tag] = fresh(a, &subst)
                     return a
                 } else {
                     let a = nextTypeVar()
-                    table[x] = a
+                    freeVariables[x] = a
                     annotations[tag] = a
                     return a
                 }
@@ -77,12 +97,12 @@ extension Inferencer {
                 annotations[tag] = type
                 return type
                 
-            case let .let(name, binding, body, tag):
+            case let .let(names, bindings, body, tag):
                 
-                let bindingType = annotate_(binding, bv)
+                let bindingTypes = zip(names, bindings.map { annotate_($0, bv) })
                 
                 var bv_ = bv
-                bv_.append((name, bindingType))
+                bv_.append(contentsOf: bindingTypes)
                 
                 let type = annotate_(body, bv_)
                 
@@ -129,12 +149,11 @@ extension Inferencer {
         case let .abs(_, ae, _):
             return collect(ae)
             
-        case let .let(_, binding, body, tag):
+        case let .let(_, bindings, body, tag):
             let type = annotations[tag]!
-            let bindingType = annotations[binding.tag]!
             let bodyType = annotations[body.tag]!
             
-            return collect(binding) + collect(body) + [(type, bodyType)]
+            return bindings.flatMap { collect($0) } + collect(body) + [(type, bodyType)]
             
         case let .cond(a, b, c, tag):
             let type = annotations[tag]!

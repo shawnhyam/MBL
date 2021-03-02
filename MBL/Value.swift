@@ -20,6 +20,7 @@ enum Value: Equatable {
     case closure(Closure)
     case sub
     case eq
+    case time
     
     var isFalse: Bool {
         return self == .bool(false)

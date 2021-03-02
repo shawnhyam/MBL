@@ -15,11 +15,13 @@ struct VM {
     var next: Int = 0
     var fp: Int = 0
     var cl: Closure = .init(body: 0, values: [])
+    var count = 0
     
     mutating func step() -> Bool {
         let inst = program[next]
         print(next, fp, stack.tos, ":", inst)
         next += 1
+        defer { count += 1 }
         
         switch inst {
         case .halt:
@@ -29,6 +31,8 @@ struct VM {
                 acc = .sub
             } else if idx == 1 {
                 acc = .eq
+            } else if idx == 2 {
+                acc = .time
             } else {
                 fatalError()
             }
@@ -84,10 +88,27 @@ struct VM {
                 self.cl = cl
                 stack.tos -= 3
             case .eq:
-                guard case let .int(arg0) = stack[stack.tos, 0],
-                      case let .int(arg1) = stack[stack.tos, 1] else { fatalError() }
-                acc = .bool(arg0 == arg1)
+                let arg0 = stack[stack.tos, 0]
+                let arg1 = stack[stack.tos, 1]
+                switch (arg0, arg1) {
+                case let (.int(v0), .int(v1)):
+                    acc = .bool(v0 == v1)
+                case let (.bool(v0), .bool(v1)):
+                    acc = .bool(v0 == v1)
+                default:
+                    fatalError()
+                }
                 stack.tos -= 2
+                guard case let .codeAddr(ret) = stack[stack.tos, 0],
+                      case let .stackAddr(link) = stack[stack.tos, 1],
+                      case let .closure(cl) = stack[stack.tos, 2] else { fatalError() }
+                next = ret
+                fp = link
+                self.cl = cl
+                stack.tos -= 3
+
+            case .time:
+                acc = .int(count)
                 guard case let .codeAddr(ret) = stack[stack.tos, 0],
                       case let .stackAddr(link) = stack[stack.tos, 1],
                       case let .closure(cl) = stack[stack.tos, 2] else { fatalError() }

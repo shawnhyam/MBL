@@ -16,11 +16,13 @@ let tests: [(String, Value, Type)] = [
     ( "(- (- 7 2) (- 5 4))", 4, .int ),
     ( "((lambda (n m) (- n m)) 5 3)", 2, .int ),
     ( "((lambda (y) ((lambda (x) (- x y)) 5)) 3)", 2, .int ),
-    ( "(let (x 3) x)", 3, .int ),
+    ( "(let ((x 3) (y 7)) (- y x))", 4, .int ),
     ( "(= 1 1)", true, .bool ),
     ( "(if (= 3 3) #f #t)", false, .bool ),
     ( "(if (= 3 4) #f #t)", true, .bool ),
-    ( "(begin 3 4)", 4, .int )
+    ( "(begin 3 4)", 4, .int ),
+    ( "(= (= 2 2) (= #t #t))", true, .bool ),
+    ( "(time)", 2, .int )
 ]
 
 for (str, value, type) in tests {

@@ -94,12 +94,21 @@ struct Parser {
     mutating func parseLet() throws -> Expr<Void> {
         tokenizer.eat(.id("let"))
         tokenizer.eat(.lparen)
-        let v = try parseVar()
-        let binding = try parseExpr()
+
+        var vars: [Variable] = []
+        var bindings: [Expr<Void>] = []
+
+        while tokenizer.peek() == .success(.lparen) {
+            tokenizer.eat(.lparen)
+            vars.append(try parseVar())
+            bindings.append(try parseExpr())
+            tokenizer.eat(.rparen)
+        }
+
         tokenizer.eat(.rparen)
 
         let body = try parseExpr()
-        return .let(v, binding, body, ())
+        return .let(vars, bindings, body, ())
     }
 
     mutating func parseLambda() throws -> Expr<Void> {
