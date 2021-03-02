@@ -3,11 +3,23 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		2DEAF87125EDC2E80033CA28 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DEAF87025EDC2E80033CA28 /* main.swift */; };
+		2DEAF87925EDC31A0033CA28 /* Expr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DEAF87825EDC31A0033CA28 /* Expr.swift */; };
+		2DEAF87D25EDC3660033CA28 /* Compiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DEAF87C25EDC3660033CA28 /* Compiler.swift */; };
+		2DEAF88025EDC3760033CA28 /* Value.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DEAF87F25EDC3760033CA28 /* Value.swift */; };
+		2DEAF88425EDC3FF0033CA28 /* Tagged in Frameworks */ = {isa = PBXBuildFile; productRef = 2DEAF88325EDC3FF0033CA28 /* Tagged */; };
+		2DEAF88825EDC42E0033CA28 /* Tokenizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DEAF88725EDC42E0033CA28 /* Tokenizer.swift */; };
+		2DEAF88B25EDC4350033CA28 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DEAF88A25EDC4350033CA28 /* Parser.swift */; };
+		2DEAF88E25EDC4500033CA28 /* Unify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DEAF88D25EDC4500033CA28 /* Unify.swift */; };
+		2DEAF89125EDC4890033CA28 /* Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DEAF89025EDC4890033CA28 /* Type.swift */; };
+		2DEAF89425EDC61A0033CA28 /* Inst.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DEAF89325EDC61A0033CA28 /* Inst.swift */; };
+		2DEAF89725EDC6830033CA28 /* VM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DEAF89625EDC6830033CA28 /* VM.swift */; };
+		2DEAF89A25EDC6A20033CA28 /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DEAF89925EDC6A20033CA28 /* Stack.swift */; };
+		2DEAF89F25EDC9080033CA28 /* Infer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DEAF89E25EDC9080033CA28 /* Infer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,6 +37,17 @@
 /* Begin PBXFileReference section */
 		2DEAF86D25EDC2E80033CA28 /* MBL */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MBL; sourceTree = BUILT_PRODUCTS_DIR; };
 		2DEAF87025EDC2E80033CA28 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		2DEAF87825EDC31A0033CA28 /* Expr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expr.swift; sourceTree = "<group>"; };
+		2DEAF87C25EDC3660033CA28 /* Compiler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Compiler.swift; sourceTree = "<group>"; };
+		2DEAF87F25EDC3760033CA28 /* Value.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Value.swift; sourceTree = "<group>"; };
+		2DEAF88725EDC42E0033CA28 /* Tokenizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tokenizer.swift; sourceTree = "<group>"; };
+		2DEAF88A25EDC4350033CA28 /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
+		2DEAF88D25EDC4500033CA28 /* Unify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Unify.swift; sourceTree = "<group>"; };
+		2DEAF89025EDC4890033CA28 /* Type.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Type.swift; sourceTree = "<group>"; };
+		2DEAF89325EDC61A0033CA28 /* Inst.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Inst.swift; sourceTree = "<group>"; };
+		2DEAF89625EDC6830033CA28 /* VM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VM.swift; sourceTree = "<group>"; };
+		2DEAF89925EDC6A20033CA28 /* Stack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
+		2DEAF89E25EDC9080033CA28 /* Infer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Infer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,6 +55,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2DEAF88425EDC3FF0033CA28 /* Tagged in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -57,9 +81,28 @@
 		2DEAF86F25EDC2E80033CA28 /* MBL */ = {
 			isa = PBXGroup;
 			children = (
+				2DEAF89D25EDC8FB0033CA28 /* Inference */,
 				2DEAF87025EDC2E80033CA28 /* main.swift */,
+				2DEAF87825EDC31A0033CA28 /* Expr.swift */,
+				2DEAF87F25EDC3760033CA28 /* Value.swift */,
+				2DEAF87C25EDC3660033CA28 /* Compiler.swift */,
+				2DEAF88725EDC42E0033CA28 /* Tokenizer.swift */,
+				2DEAF88A25EDC4350033CA28 /* Parser.swift */,
+				2DEAF89025EDC4890033CA28 /* Type.swift */,
+				2DEAF89325EDC61A0033CA28 /* Inst.swift */,
+				2DEAF89625EDC6830033CA28 /* VM.swift */,
+				2DEAF89925EDC6A20033CA28 /* Stack.swift */,
 			);
 			path = MBL;
+			sourceTree = "<group>";
+		};
+		2DEAF89D25EDC8FB0033CA28 /* Inference */ = {
+			isa = PBXGroup;
+			children = (
+				2DEAF88D25EDC4500033CA28 /* Unify.swift */,
+				2DEAF89E25EDC9080033CA28 /* Infer.swift */,
+			);
+			path = Inference;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -78,6 +121,9 @@
 			dependencies = (
 			);
 			name = MBL;
+			packageProductDependencies = (
+				2DEAF88325EDC3FF0033CA28 /* Tagged */,
+			);
 			productName = MBL;
 			productReference = 2DEAF86D25EDC2E80033CA28 /* MBL */;
 			productType = "com.apple.product-type.tool";
@@ -105,6 +151,9 @@
 				Base,
 			);
 			mainGroup = 2DEAF86425EDC2E80033CA28;
+			packageReferences = (
+				2DEAF88225EDC3FF0033CA28 /* XCRemoteSwiftPackageReference "swift-tagged" */,
+			);
 			productRefGroup = 2DEAF86E25EDC2E80033CA28 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -119,7 +168,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2DEAF87D25EDC3660033CA28 /* Compiler.swift in Sources */,
+				2DEAF88825EDC42E0033CA28 /* Tokenizer.swift in Sources */,
+				2DEAF89F25EDC9080033CA28 /* Infer.swift in Sources */,
+				2DEAF88E25EDC4500033CA28 /* Unify.swift in Sources */,
+				2DEAF88B25EDC4350033CA28 /* Parser.swift in Sources */,
+				2DEAF87925EDC31A0033CA28 /* Expr.swift in Sources */,
+				2DEAF89A25EDC6A20033CA28 /* Stack.swift in Sources */,
+				2DEAF89425EDC61A0033CA28 /* Inst.swift in Sources */,
 				2DEAF87125EDC2E80033CA28 /* main.swift in Sources */,
+				2DEAF88025EDC3760033CA28 /* Value.swift in Sources */,
+				2DEAF89725EDC6830033CA28 /* VM.swift in Sources */,
+				2DEAF89125EDC4890033CA28 /* Type.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -285,6 +345,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2DEAF88225EDC3FF0033CA28 /* XCRemoteSwiftPackageReference "swift-tagged" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-tagged";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.5.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2DEAF88325EDC3FF0033CA28 /* Tagged */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2DEAF88225EDC3FF0033CA28 /* XCRemoteSwiftPackageReference "swift-tagged" */;
+			productName = Tagged;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2DEAF86525EDC2E80033CA28 /* Project object */;
 }
