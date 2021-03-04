@@ -7,17 +7,21 @@
 
 import Foundation
 
-struct VM {
+public struct VM {
     let program: [Inst]
     var stack: Stack = Stack()
 
-    var acc: Value = .int(0)
+    public private(set) var acc: Value = .int(0)
     var next: Int = 0
     var fp: Int = 0
     var cl: Closure = .init(body: 0, values: [])
     var count = 0
     
-    mutating func step() -> Bool {
+    public init(program: [Inst]) {
+        self.program = program
+    }
+    
+    public mutating func step() -> Bool {
         let inst = program[next]
         print(next, fp, stack.tos, ":", inst)
         next += 1

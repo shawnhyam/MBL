@@ -7,10 +7,15 @@
 
 import Foundation
 
-typealias Variable = String
+public typealias Variable = String
 
-indirect enum Expr<Tag> {
-    case lit(Value, Tag)
+public enum Literal {
+    case int(Int)
+    case bool(Bool)
+}
+
+public indirect enum Expr<Tag> {
+    case lit(Literal, Tag)
     case `var`(Variable, Tag)
     case cond(Expr, Expr, Expr, Tag)
     case abs([Variable], Expr, Tag)
@@ -21,7 +26,7 @@ indirect enum Expr<Tag> {
     case seq([Expr], Tag)
 }
 
-extension Expr {
+public extension Expr {
     var tag: Tag {
         switch self {
         case let .lit(_, t):
@@ -71,6 +76,11 @@ extension Expr {
 }
 
 extension Expr where Tag == Void {
+    public func applyTags() -> Expr<Int> {
+        var n = 0
+        return _tag(&n)
+    }
+
     private func _tag(_ n: inout Int) -> Expr<Int> {
         defer { n += 1 }
         switch self {
@@ -97,8 +107,4 @@ extension Expr where Tag == Void {
         }
     }
     
-    func applyTags() -> Expr<Int> {
-        var n = 0
-        return _tag(&n)
-    }
 }

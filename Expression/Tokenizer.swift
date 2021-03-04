@@ -27,11 +27,11 @@ extension CharacterSet {
     }
 }
 
-struct Tokenizer {
+public struct Tokenizer {
     private var input: Substring
     private var token: Result<Token, TokError>!
     
-    init(_ input: Substring) {
+    public init(_ input: Substring) {
         self.input = input
         token = next()
     }

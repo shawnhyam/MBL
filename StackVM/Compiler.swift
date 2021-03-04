@@ -6,14 +6,23 @@
 //
 
 import Foundation
+import Expression
 
 
 let globals = Set<Variable>(arrayLiteral: "-", "=", "time")
 
-struct CompileEnv {
-    var global: [String] = ["-", "=", "time"]
-    var local: [String] = []
-    var free: [String] = []
+public struct CompileEnv {
+    var global: [String]
+    var local: [String]
+    var free: [String]
+    
+    public init(global: [String] = ["-", "=", "time"],
+                local: [String] = [],
+                free: [String] = []) {
+        self.global = global
+        self.local = local
+        self.free = free
+    }
 }
 
 
@@ -61,7 +70,7 @@ extension Expr {
         }
     }
 
-    func compile(_ env: CompileEnv) -> [Inst] {
+    public func compile(_ env: CompileEnv) -> [Inst] {
         var program: [Inst] = [.halt]
         compile(env, &program)
         return program.reversed()
@@ -75,8 +84,10 @@ extension Expr {
 
     func compile(_ env: CompileEnv, _ program: inout [Inst]) {
         switch self {
-        case let .lit(v, _):
-            program.append(.constant(v))
+        case let .lit(.int(v), _):
+            program.append(.constant(.int(v)))
+        case let .lit(.bool(v), _):
+            program.append(.constant(.bool(v)))
         case let .var(name, _):
             program.append(compileRefer(name, env))
             

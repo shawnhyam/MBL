@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Inst: Equatable {
+public enum Inst: Equatable {
     case shift(Int, Int)
 
     case halt
@@ -29,7 +29,7 @@ enum Inst: Equatable {
 
 
 extension Inst: CustomStringConvertible {
-    var description: String {
+    public var description: String {
         switch self {
         case .halt: return "halt"
         case .shift: return "shift"

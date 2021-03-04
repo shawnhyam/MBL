@@ -7,12 +7,17 @@
 
 import Foundation
 
-struct Closure: Equatable {
+public struct Closure: Equatable {
     var body: Int
     var values: [Value]
+    
+    public init(body: Int, values: [Value]) {
+        self.body = body
+        self.values = values
+    }
 }
 
-enum Value: Equatable {
+public enum Value: Equatable {
     case stackAddr(Int)
     case codeAddr(Int)
     case int(Int)
@@ -28,11 +33,11 @@ enum Value: Equatable {
 }
 
 extension Value: ExpressibleByIntegerLiteral, ExpressibleByBooleanLiteral {
-    init(integerLiteral value: IntegerLiteralType) {
+    public init(integerLiteral value: IntegerLiteralType) {
         self = .int(value)
     }
     
-    init(booleanLiteral value: BooleanLiteralType) {
+    public init(booleanLiteral value: BooleanLiteralType) {
         self = .bool(value)
     }
 }

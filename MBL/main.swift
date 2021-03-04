@@ -6,7 +6,8 @@
 //
 
 import Foundation
-
+import StackVM
+import Expression
 
 
 let tests: [(String, Value, Type)] = [

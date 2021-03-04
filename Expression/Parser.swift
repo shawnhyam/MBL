@@ -14,14 +14,14 @@ enum ParseError: Error {
 }
 
 
-struct Parser {
+public struct Parser {
     var tokenizer: Tokenizer
     
-    init(_ tokenizer: Tokenizer) {
+    public init(_ tokenizer: Tokenizer) {
         self.tokenizer = tokenizer
     }
  
-    mutating func parseExpr() throws -> Expr<Void> {
+    public mutating func parseExpr() throws -> Expr<Void> {
         switch tokenizer.peek() {
         case let .failure(error):
             fatalError()
