@@ -96,17 +96,32 @@ extension Inferencer {
                 annotate_(c, bv)
                 annotations[tag] = type
                 return type
-                
+
+            case let .fix(f, vars, body, lamTag, tag):
+                let newType = nextTypeVar()
+                annotations[tag] = newType
+
+                var bv_ = bv
+                bv_.append((f, newType))
+
+                let newTypes = vars.map { ($0, nextTypeVar()) }
+                bv_.append(contentsOf: newTypes)
+
+                let bodyType = annotate_(body, bv_)
+                let type = Type.arrow(newTypes.map { $0.1 } + [bodyType])
+                annotations[lamTag] = type
+
+                return newType
+
+
+
             case let .let(names, bindings, body, tag):
-                
                 let bindingTypes = zip(names, bindings.map { annotate_($0, bv) })
-                
                 var bv_ = bv
                 bv_.append(contentsOf: bindingTypes)
                 
                 let type = annotate_(body, bv_)
                 
-//                let type = nextTypeVar()
                 annotations[tag] = type
                 return type
                 
@@ -171,6 +186,9 @@ extension Inferencer {
             return result
         case .lit(_, _):
             return []
+
+        case let .fix(_, _, body, lamTag, fixTag):
+            return collect(body) + [(annotations[lamTag]!, annotations[fixTag]!)]
             
         case let .seq(exprs, _):
             return exprs.flatMap { collect($0) }

@@ -25,6 +25,12 @@ let tests: [(String, Value, Type)] = [
     ( "(time)", 2, .int )
 ]
 
+// ( "(letrec (f (x) (if (= x 0) 0 (f (- x 1)))) (f 3))", 0, .int )
+// ( "(let ((bar (lambda (x) x))) (bar 3))", 0, .int )
+// ( "((lambda (f) (f 3)) (lambda (x) x))", 3, .int )
+// ( "(let ((bar (fix foo (x) (if (= x 0) 0 (foo (- x 1)))))) (bar 3))", 0, .int )
+// ( "(fix id (x) (id x))", 0, .arrow([.var("τ2"), .var("τ3")]) )
+
 for (str, value, type) in tests {
     let tokenizer = Tokenizer(str[...])
     //while case let .success(token) = tokenizer.eat() {

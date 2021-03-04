@@ -57,10 +57,14 @@ struct Parser {
                 return try parseLambda()
             } else if token == .id("let") {
                 return try parseLet()
+            } else if token == .id("letrec") {
+                return try parseLetrec()
             } else if token == .id("if") {
                 return try parseIf()
             } else if token == .id("begin") {
                 return try parseSequence()
+            } else if token == .id("fix") {
+                return try parseFix()
             } else {
                 var exprs: [Expr<Void>] = []
                 while tokenizer.peek() != .success(.rparen) {
@@ -71,7 +75,7 @@ struct Parser {
             }
         }
     }
-    
+
     mutating func parseIf() throws -> Expr<Void> {
         tokenizer.eat(.id("if"))
         let pred = try parseExpr()
@@ -109,6 +113,35 @@ struct Parser {
 
         let body = try parseExpr()
         return .let(vars, bindings, body, ())
+    }
+
+    mutating func parseFix() throws -> Expr<Void> {
+        tokenizer.eat(.id("fix"))
+        let name = try parseVar()
+        tokenizer.eat(.lparen)
+        let vars = try parseVars()
+        tokenizer.eat(.rparen)
+        let body = try parseExpr()
+        return .fix(name, vars, body, (), ())
+
+    }
+
+    mutating func parseLetrec() throws -> Expr<Void> {
+        // removed support for now
+        fatalError()
+//
+//        tokenizer.eat(.id("letrec"))
+//        tokenizer.eat(.lparen)
+//        let v = try parseVar()
+//
+//        tokenizer.eat(.lparen)
+//        let names = try parseVars()
+//        tokenizer.eat(.rparen)
+//
+//        let expr = try parseExpr()
+//        tokenizer.eat(.rparen)
+//        let body = try parseExpr()
+//        return .let([v], [.fix(v, .abs(names, expr, ()), ())], body, ())
     }
 
     mutating func parseLambda() throws -> Expr<Void> {

@@ -25,8 +25,8 @@ extension Expr {
         case let .var(v, _):
             if globals.contains(v) { return [] }
             return bound.contains(v) ? [] : [v]
-        case .cond(_, _, _, _):
-            fatalError()
+        case let .cond(test, then, else_, _):
+            return test.findFree(bound).union(then.findFree(bound)).union(else_.findFree(bound))
         case let .abs(vars, body, _):
             return body.findFree(bound.union(vars))
         case .set(_, _, _):
@@ -37,6 +37,8 @@ extension Expr {
             fatalError()
         case .seq(_, _):
             fatalError()
+        case let .fix(f, vars, body, _, _):
+            return body.findFree(bound.union(vars + [f]))
         }
     }
     
@@ -144,8 +146,22 @@ extension Expr {
             program.append(contentsOf: elseC)
             program.append(contentsOf: thenC)
             program.append(contentsOf: predC)
-        
-            
+
+        case let .fix(_, vars, body, _, _):
+            let free = Array(body.findFree(Set(vars).union(globals)))
+            let env_ = CompileEnv(local: vars, free: free)
+
+            var bodyC: [Inst] = [.return(vars.count)]
+            body.compile(env_, &bodyC)
+
+            let offset = program.count+1
+            program.insert(contentsOf: bodyC, at: 0)
+
+            program.append(.close(free.count, addr: offset))
+
+            let tmp = collectFree(free, env)
+            program.append(contentsOf: tmp)
+
         case .set(_, _, _):
             fatalError()
             
