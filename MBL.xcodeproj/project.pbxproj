@@ -25,6 +25,16 @@
 		2D8473D225F19A3B005E035E /* Expr.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DEAF87825EDC31A0033CA28 /* Expr.swift */; };
 		2D8473DB25F19A46005E035E /* Expression.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8473B525F19A2D005E035E /* Expression.framework */; };
 		2D8473DC25F19A46005E035E /* Expression.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8473B525F19A2D005E035E /* Expression.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2D8473F725F19C96005E035E /* ExpressionVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8473EE25F19C96005E035E /* ExpressionVM.framework */; };
+		2D8473FC25F19C96005E035E /* ExpressionVMTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8473FB25F19C96005E035E /* ExpressionVMTests.swift */; };
+		2D8473FE25F19C96005E035E /* ExpressionVM.h in Headers */ = {isa = PBXBuildFile; fileRef = 2D8473F025F19C96005E035E /* ExpressionVM.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2D84740B25F19CA4005E035E /* ExprVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D84740A25F19CA4005E035E /* ExprVM.swift */; };
+		2D84741125F19CD7005E035E /* Expression.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8473B525F19A2D005E035E /* Expression.framework */; };
+		2D84741225F19CD7005E035E /* Expression.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8473B525F19A2D005E035E /* Expression.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2D84741525F19CD7005E035E /* ExpressionVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8473EE25F19C96005E035E /* ExpressionVM.framework */; };
+		2D84741625F19CD7005E035E /* ExpressionVM.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8473EE25F19C96005E035E /* ExpressionVM.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2D84741E25F19CE1005E035E /* Expression.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8473B525F19A2D005E035E /* Expression.framework */; };
+		2D84741F25F19CE1005E035E /* Expression.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8473B525F19A2D005E035E /* Expression.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2DEAF87125EDC2E80033CA28 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DEAF87025EDC2E80033CA28 /* main.swift */; };
 		2DEAF88425EDC3FF0033CA28 /* Tagged in Frameworks */ = {isa = PBXBuildFile; productRef = 2DEAF88325EDC3FF0033CA28 /* Tagged */; };
 		2DEAF88E25EDC4500033CA28 /* Unify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DEAF88D25EDC4500033CA28 /* Unify.swift */; };
@@ -61,6 +71,34 @@
 			remoteGlobalIDString = 2D8473B425F19A2D005E035E;
 			remoteInfo = Expression;
 		};
+		2D8473F825F19C96005E035E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2DEAF86525EDC2E80033CA28 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2D8473ED25F19C96005E035E;
+			remoteInfo = ExpressionVM;
+		};
+		2D84741325F19CD7005E035E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2DEAF86525EDC2E80033CA28 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2D8473B425F19A2D005E035E;
+			remoteInfo = Expression;
+		};
+		2D84741725F19CD7005E035E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2DEAF86525EDC2E80033CA28 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2D8473ED25F19C96005E035E;
+			remoteInfo = ExpressionVM;
+		};
+		2D84742025F19CE1005E035E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2DEAF86525EDC2E80033CA28 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2D8473B425F19A2D005E035E;
+			remoteInfo = Expression;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -70,6 +108,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				2D84741625F19CD7005E035E /* ExpressionVM.framework in Embed Frameworks */,
+				2D84741225F19CD7005E035E /* Expression.framework in Embed Frameworks */,
 				2D8473AA25F199EB005E035E /* StackVM.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -82,6 +122,17 @@
 			dstSubfolderSpec = 10;
 			files = (
 				2D8473DC25F19A46005E035E /* Expression.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2D84742225F19CE1005E035E /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				2D84741F25F19CE1005E035E /* Expression.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -110,6 +161,13 @@
 		2D8473BD25F19A2D005E035E /* ExpressionTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ExpressionTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D8473C225F19A2D005E035E /* ExpressionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpressionTests.swift; sourceTree = "<group>"; };
 		2D8473C425F19A2D005E035E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2D8473EE25F19C96005E035E /* ExpressionVM.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ExpressionVM.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D8473F025F19C96005E035E /* ExpressionVM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExpressionVM.h; sourceTree = "<group>"; };
+		2D8473F125F19C96005E035E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2D8473F625F19C96005E035E /* ExpressionVMTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ExpressionVMTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D8473FB25F19C96005E035E /* ExpressionVMTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpressionVMTests.swift; sourceTree = "<group>"; };
+		2D8473FD25F19C96005E035E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2D84740A25F19CA4005E035E /* ExprVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExprVM.swift; sourceTree = "<group>"; };
 		2DEAF86D25EDC2E80033CA28 /* MBL */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MBL; sourceTree = BUILT_PRODUCTS_DIR; };
 		2DEAF87025EDC2E80033CA28 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		2DEAF87825EDC31A0033CA28 /* Expr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expr.swift; sourceTree = "<group>"; };
@@ -157,10 +215,28 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2D8473EB25F19C96005E035E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2D84741E25F19CE1005E035E /* Expression.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2D8473F325F19C96005E035E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2D8473F725F19C96005E035E /* ExpressionVM.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2DEAF86A25EDC2E80033CA28 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2D84741125F19CD7005E035E /* Expression.framework in Frameworks */,
+				2D84741525F19CD7005E035E /* ExpressionVM.framework in Frameworks */,
 				2D8473A925F199EB005E035E /* StackVM.framework in Frameworks */,
 				2DEAF88425EDC3FF0033CA28 /* Tagged in Frameworks */,
 			);
@@ -220,6 +296,25 @@
 			path = ExpressionTests;
 			sourceTree = "<group>";
 		};
+		2D8473EF25F19C96005E035E /* ExpressionVM */ = {
+			isa = PBXGroup;
+			children = (
+				2D8473F025F19C96005E035E /* ExpressionVM.h */,
+				2D8473F125F19C96005E035E /* Info.plist */,
+				2D84740A25F19CA4005E035E /* ExprVM.swift */,
+			);
+			path = ExpressionVM;
+			sourceTree = "<group>";
+		};
+		2D8473FA25F19C96005E035E /* ExpressionVMTests */ = {
+			isa = PBXGroup;
+			children = (
+				2D8473FB25F19C96005E035E /* ExpressionVMTests.swift */,
+				2D8473FD25F19C96005E035E /* Info.plist */,
+			);
+			path = ExpressionVMTests;
+			sourceTree = "<group>";
+		};
 		2DEAF86425EDC2E80033CA28 = {
 			isa = PBXGroup;
 			children = (
@@ -228,6 +323,8 @@
 				2D84738F25F199C5005E035E /* StackVMTests */,
 				2D8473B625F19A2D005E035E /* Expression */,
 				2D8473C125F19A2D005E035E /* ExpressionTests */,
+				2D8473EF25F19C96005E035E /* ExpressionVM */,
+				2D8473FA25F19C96005E035E /* ExpressionVMTests */,
 				2DEAF86E25EDC2E80033CA28 /* Products */,
 				2D8473A825F199EB005E035E /* Frameworks */,
 			);
@@ -241,6 +338,8 @@
 				2D84738B25F199C5005E035E /* StackVMTests.xctest */,
 				2D8473B525F19A2D005E035E /* Expression.framework */,
 				2D8473BD25F19A2D005E035E /* ExpressionTests.xctest */,
+				2D8473EE25F19C96005E035E /* ExpressionVM.framework */,
+				2D8473F625F19C96005E035E /* ExpressionVMTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -280,6 +379,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				2D8473C525F19A2D005E035E /* Expression.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2D8473E925F19C96005E035E /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2D8473FE25F19C96005E035E /* ExpressionVM.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -360,6 +467,44 @@
 			productReference = 2D8473BD25F19A2D005E035E /* ExpressionTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		2D8473ED25F19C96005E035E /* ExpressionVM */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2D8473FF25F19C96005E035E /* Build configuration list for PBXNativeTarget "ExpressionVM" */;
+			buildPhases = (
+				2D8473E925F19C96005E035E /* Headers */,
+				2D8473EA25F19C96005E035E /* Sources */,
+				2D8473EB25F19C96005E035E /* Frameworks */,
+				2D8473EC25F19C96005E035E /* Resources */,
+				2D84742225F19CE1005E035E /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2D84742125F19CE1005E035E /* PBXTargetDependency */,
+			);
+			name = ExpressionVM;
+			productName = ExpressionVM;
+			productReference = 2D8473EE25F19C96005E035E /* ExpressionVM.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		2D8473F525F19C96005E035E /* ExpressionVMTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2D84740225F19C96005E035E /* Build configuration list for PBXNativeTarget "ExpressionVMTests" */;
+			buildPhases = (
+				2D8473F225F19C96005E035E /* Sources */,
+				2D8473F325F19C96005E035E /* Frameworks */,
+				2D8473F425F19C96005E035E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2D8473F925F19C96005E035E /* PBXTargetDependency */,
+			);
+			name = ExpressionVMTests;
+			productName = ExpressionVMTests;
+			productReference = 2D8473F625F19C96005E035E /* ExpressionVMTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		2DEAF86C25EDC2E80033CA28 /* MBL */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2DEAF87425EDC2E80033CA28 /* Build configuration list for PBXNativeTarget "MBL" */;
@@ -373,6 +518,8 @@
 			);
 			dependencies = (
 				2D8473AC25F199EB005E035E /* PBXTargetDependency */,
+				2D84741425F19CD7005E035E /* PBXTargetDependency */,
+				2D84741825F19CD7005E035E /* PBXTargetDependency */,
 			);
 			name = MBL;
 			packageProductDependencies = (
@@ -403,6 +550,13 @@
 					2D8473BC25F19A2D005E035E = {
 						CreatedOnToolsVersion = 12.4;
 					};
+					2D8473ED25F19C96005E035E = {
+						CreatedOnToolsVersion = 12.4;
+						LastSwiftMigration = 1240;
+					};
+					2D8473F525F19C96005E035E = {
+						CreatedOnToolsVersion = 12.4;
+					};
 					2DEAF86C25EDC2E80033CA28 = {
 						CreatedOnToolsVersion = 12.4;
 					};
@@ -429,6 +583,8 @@
 				2D84738A25F199C5005E035E /* StackVMTests */,
 				2D8473B425F19A2D005E035E /* Expression */,
 				2D8473BC25F19A2D005E035E /* ExpressionTests */,
+				2D8473ED25F19C96005E035E /* ExpressionVM */,
+				2D8473F525F19C96005E035E /* ExpressionVMTests */,
 			);
 		};
 /* End PBXProject section */
@@ -456,6 +612,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		2D8473BB25F19A2D005E035E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2D8473EC25F19C96005E035E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2D8473F425F19C96005E035E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -503,6 +673,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2D8473EA25F19C96005E035E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2D84740B25F19CA4005E035E /* ExprVM.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2D8473F225F19C96005E035E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2D8473FC25F19C96005E035E /* ExpressionVMTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2DEAF86925EDC2E80033CA28 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -536,6 +722,26 @@
 			isa = PBXTargetDependency;
 			target = 2D8473B425F19A2D005E035E /* Expression */;
 			targetProxy = 2D8473DD25F19A46005E035E /* PBXContainerItemProxy */;
+		};
+		2D8473F925F19C96005E035E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2D8473ED25F19C96005E035E /* ExpressionVM */;
+			targetProxy = 2D8473F825F19C96005E035E /* PBXContainerItemProxy */;
+		};
+		2D84741425F19CD7005E035E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2D8473B425F19A2D005E035E /* Expression */;
+			targetProxy = 2D84741325F19CD7005E035E /* PBXContainerItemProxy */;
+		};
+		2D84741825F19CD7005E035E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2D8473ED25F19C96005E035E /* ExpressionVM */;
+			targetProxy = 2D84741725F19CD7005E035E /* PBXContainerItemProxy */;
+		};
+		2D84742125F19CE1005E035E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2D8473B425F19A2D005E035E /* Expression */;
+			targetProxy = 2D84742025F19CE1005E035E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -724,6 +930,105 @@
 			};
 			name = Release;
 		};
+		2D84740025F19C96005E035E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 2FRWKWHVQR;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = ExpressionVM/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				PRODUCT_BUNDLE_IDENTIFIER = tech.amarantin.ExpressionVM;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		2D84740125F19C96005E035E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 2FRWKWHVQR;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = ExpressionVM/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				PRODUCT_BUNDLE_IDENTIFIER = tech.amarantin.ExpressionVM;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		2D84740325F19C96005E035E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 2FRWKWHVQR;
+				INFOPLIST_FILE = ExpressionVMTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				PRODUCT_BUNDLE_IDENTIFIER = tech.amarantin.ExpressionVMTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		2D84740425F19C96005E035E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 2FRWKWHVQR;
+				INFOPLIST_FILE = ExpressionVMTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				PRODUCT_BUNDLE_IDENTIFIER = tech.amarantin.ExpressionVMTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		2DEAF87225EDC2E80033CA28 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -896,6 +1201,24 @@
 			buildConfigurations = (
 				2D8473CA25F19A2D005E035E /* Debug */,
 				2D8473CB25F19A2D005E035E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2D8473FF25F19C96005E035E /* Build configuration list for PBXNativeTarget "ExpressionVM" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2D84740025F19C96005E035E /* Debug */,
+				2D84740125F19C96005E035E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2D84740225F19C96005E035E /* Build configuration list for PBXNativeTarget "ExpressionVMTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2D84740325F19C96005E035E /* Debug */,
+				2D84740425F19C96005E035E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
