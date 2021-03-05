@@ -40,7 +40,7 @@ for (str, value, type) in tests {
     //}
     var parser = Parser(tokenizer)
     let expr = try parser.parseExpr()
-    let taggedExpr = expr.applyTags()
+    let taggedExpr = expr.rewriteLet().applyTags()
     
     var inferencer = Inferencer()
     let t = inferencer.infer(taggedExpr)

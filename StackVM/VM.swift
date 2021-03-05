@@ -19,6 +19,16 @@ public struct VM {
     
     public init(program: [Inst]) {
         self.program = program
+
+        for (inst1, inst2) in zip(program, program[1...]) {
+            switch (inst1, inst2) {
+            case (.apply, .return):
+                fatalError()
+            default:
+                break
+            }
+            print(inst1, inst2)
+        }
     }
     
     public mutating func step() -> Bool {

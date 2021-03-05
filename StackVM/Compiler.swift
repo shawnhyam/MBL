@@ -26,6 +26,8 @@ public struct CompileEnv {
 }
 
 struct CompileContext {
+    var dropReturn: Set<Int> = []
+    var tailCall: [Int: Int] = [:]
 }
 
 extension Expr where Tag == Int {
@@ -73,8 +75,14 @@ extension Expr where Tag == Int {
     }
 
     public func compile(_ env: CompileEnv) -> [Inst] {
+        var context = CompileContext()
+        for tailCall in findTailCalls() {
+            context.dropReturn.insert(tailCall.abs)
+            context.tailCall[tailCall.app] = tailCall.stack
+        }
+
         var blocks: [Label: [Inst]] = [:]
-        var main = _compile(CompileContext(), env, &blocks) + [.halt]
+        var main = _compile(context, env, &blocks) + [.halt]
 
         // collect up the addresses of the other code blocks
         var addresses: [Label: Int] = [:]
@@ -105,11 +113,12 @@ extension Expr where Tag == Int {
         case let .var(name, _):
             return [compileRefer(name, env)]
 
-        case let .abs(vars, body, _):
+        case let .abs(vars, body, tag):
             let free = Array(body.findFree(Set(vars).union(globals)))
             let env_ = CompileEnv(local: vars, free: free)
 
-            let bodyC = body._compile(context, env_, &blocks) + [.return(vars.count)]
+            let bodyC = body._compile(context, env_, &blocks) +
+                (context.dropReturn.contains(tag) ? [] : [.return(vars.count)])
 
             let tmp = collectFree(free, env)
             let insts = [Inst.close(free.count, addr: .label(body.tag))]
@@ -117,7 +126,8 @@ extension Expr where Tag == Int {
             blocks[body.tag] = bodyC
             return tmp + insts
 
-        case let .app(fn, args, _):
+        case let .app(fn, args, tag):
+            let tailCall = context.tailCall[tag]
             var insts: [Inst] = []
 
             args.reversed().forEach { arg in
@@ -127,13 +137,17 @@ extension Expr where Tag == Int {
             }
 
             insts.append(contentsOf: fn._compile(context, env, &blocks))
-            insts.append(.apply)
 
-            return [.frame(addr: .rel(insts.count+1))] + insts
+            if let stack = tailCall {
+                return insts + [.shift(args.count, stack), .apply]
+            } else {
+                return [.frame(addr: .rel(insts.count+2))] + insts + [.apply]
+            }
 
         case let .let(names, bindings, body, tag):
             // inefficient, but rewrite let into lambda and apply
-            return Expr.app(.abs(names, body, tag), bindings, tag)._compile(context, env, &blocks)
+            //return Expr.app(.abs(names, body, tag), bindings, tag)._compile(context, env, &blocks)
+            fatalError()
 
 
         case let .cond(pred, then, else_, _):
