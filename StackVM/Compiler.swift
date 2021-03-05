@@ -15,7 +15,7 @@ public struct CompileEnv {
     var global: [String]
     var local: [String]
     var free: [String]
-    
+
     public init(global: [String] = ["-", "=", "time"],
                 local: [String] = [],
                 free: [String] = []) {
@@ -25,8 +25,10 @@ public struct CompileEnv {
     }
 }
 
+struct CompileContext {
+}
 
-extension Expr {
+extension Expr where Tag == Int {
     func findFree(_ bound: Set<Variable>) -> Set<Variable> {
         switch self {
         case .lit(_, _):
@@ -53,7 +55,7 @@ extension Expr {
     
     func collectFree(_ vars: [Variable], _ env: CompileEnv) -> [Inst] {
         return vars.flatMap { v in
-            [.argument, compileRefer(v, env)]
+            [compileRefer(v, env), .argument]
         }
     }
 
@@ -71,114 +73,105 @@ extension Expr {
     }
 
     public func compile(_ env: CompileEnv) -> [Inst] {
-        var program: [Inst] = [.halt]
-        compile(env, &program)
-        return program.reversed()
+        var blocks: [Label: [Inst]] = [:]
+        var main = _compile(CompileContext(), env, &blocks) + [.halt]
+
+        // collect up the addresses of the other code blocks
+        var addresses: [Label: Int] = [:]
+        for (label, block) in blocks {
+            addresses[label] = main.count
+            main.append(contentsOf: block)
+        }
+
+        // rewrite all labels to code addresses
+        return main.map { inst in
+            switch inst {
+            case let .close(x, addr: .label(label)):
+                return .close(x, addr: .abs(addresses[label]!))
+            default:
+                return inst
+            }
+        }
     }
     
-    func _compile(_ env: CompileEnv) -> [Inst] {
-        var program: [Inst] = []
-        compile(env, &program)
-        return program
-    }
-
-    func compile(_ env: CompileEnv, _ program: inout [Inst]) {
+    func _compile(_ context: CompileContext,
+                  _ env: CompileEnv,
+                  _ blocks: inout [Label: [Inst]]) -> [Inst] {
         switch self {
         case let .lit(.int(v), _):
-            program.append(.constant(.int(v)))
+            return [.constant(.int(v))]
         case let .lit(.bool(v), _):
-            program.append(.constant(.bool(v)))
+            return [.constant(.bool(v))]
         case let .var(name, _):
-            program.append(compileRefer(name, env))
-            
-        case let .let(names, bindings, body, tag):
-            // inefficient, but rewrite let into lambda and apply
-            Expr.app(.abs(names, body, tag), bindings, tag).compile(env, &program)
+            return [compileRefer(name, env)]
 
         case let .abs(vars, body, _):
             let free = Array(body.findFree(Set(vars).union(globals)))
             let env_ = CompileEnv(local: vars, free: free)
-            
-            var bodyC: [Inst] = [.return(vars.count)]
-            body.compile(env_, &bodyC)
 
-            let offset = program.count+1
-            program.insert(contentsOf: bodyC, at: 0)
-            
-            program.append(.close(free.count, addr: offset))
+            let bodyC = body._compile(context, env_, &blocks) + [.return(vars.count)]
 
             let tmp = collectFree(free, env)
-            program.append(contentsOf: tmp)
-        
+            let insts = [Inst.close(free.count, addr: .label(body.tag))]
+
+            blocks[body.tag] = bodyC
+            return tmp + insts
+
         case let .app(fn, args, _):
-            let tailCall: Bool
-            var offset = 1
-            
-            //let fnC: Inst
-            if case let .return(m) = program.last { //, args.count != m {
-                tailCall = true
-                program.removeLast()
-                
-                var fnC: [Inst] = [.apply, .shift(args.count, m)]
-                fn.compile(env, &fnC)
-                program.append(contentsOf: fnC)
-                offset += fnC.count - 1  // because we removed the ret
+            var insts: [Inst] = []
 
-                //fnC = fn.compileYYZ(env, .shift(args.count, m, .apply))
-            } else {
-                tailCall = false
-                var fnC: [Inst] = [.apply]
-                fn.compile(env, &fnC)
-                program.append(contentsOf: fnC)
-                offset += fnC.count
+            args.reversed().forEach { arg in
+                let argC = arg._compile(context, env, &blocks)
+                insts.append(contentsOf: argC)
+                insts.append(.argument)
             }
-            
-            var argsC: [Inst] = []
-            args.forEach { arg in
-                argsC.append(.argument)
-                arg.compile(env, &argsC)
-            }
-            program.append(contentsOf: argsC)
-            offset += argsC.count
-            
-            if tailCall {
-                // don't create a new frame
-            } else {
-                program.append(.frame(addr: offset))
-            }
-            
+
+            insts.append(contentsOf: fn._compile(context, env, &blocks))
+            insts.append(.apply)
+
+            return [.frame(addr: .rel(insts.count+1))] + insts
+
+        case let .let(names, bindings, body, tag):
+            // inefficient, but rewrite let into lambda and apply
+            return Expr.app(.abs(names, body, tag), bindings, tag)._compile(context, env, &blocks)
+
+
         case let .cond(pred, then, else_, _):
-            //Inst.test(<#T##CodeAddr#>)
-            let elseC = else_._compile(env)
-            let thenC = [.jmp(addr: elseC.count+1)] + then._compile(env)
-            let predC = [.test(addr: thenC.count+1)] + pred._compile(env)
-            
-            // predC, test, thenC, jmp, elseC, ...
-            program.append(contentsOf: elseC)
-            program.append(contentsOf: thenC)
-            program.append(contentsOf: predC)
+            let elseC = else_._compile(context, env, &blocks)
+            let thenC = then._compile(context, env, &blocks) + [.jmp(addr: .rel(elseC.count+1))]
+            let predC = pred._compile(context, env, &blocks) + [.test(addr: .rel(thenC.count+1))]
+            return predC + thenC + elseC
 
-        case let .fix(_, vars, body, _, _):
-            let free = Array(body.findFree(Set(vars).union(globals)))
-            let env_ = CompileEnv(local: vars, free: free)
+        case let .seq(exprs, _):
+            return exprs.flatMap { $0._compile(context, env, &blocks) }
 
-            var bodyC: [Inst] = [.return(vars.count)]
-            body.compile(env_, &bodyC)
+        case let .fix(f, vars, body, _, _):
+            let allVars = vars
+            let free = Array(body.findFree(Set(allVars).union(globals)))
+            let env_ = CompileEnv(local: allVars, free: free)
 
-            let offset = program.count+1
-            program.insert(contentsOf: bodyC, at: 0)
+            let bodyC = body._compile(context, env_, &blocks) + [.return(allVars.count)]
 
-            program.append(.close(free.count, addr: offset))
+            let tmp = collectFree(free, env_)
+            let insts = [Inst.close(free.count, addr: .label(body.tag))]
 
-            let tmp = collectFree(free, env)
-            program.append(contentsOf: tmp)
+            blocks[body.tag] = bodyC
+            return tmp + insts
 
+
+            fatalError()
+//            var bodyC: [Inst] = [.return(vars.count)]
+//            body.compile(env_, &bodyC)
+//
+//            let offset = program.count+1
+//            program.insert(contentsOf: bodyC, at: 0)
+//
+//            program.append(.close(free.count, addr: offset))
+//
+//            let tmp = collectFree(free, env)
+//            program.append(contentsOf: tmp)
         case .set(_, _, _):
             fatalError()
-            
-        case let .seq(exprs, _):
-            let inst = exprs.reversed().flatMap { $0._compile(env) }
-            program.append(contentsOf: inst)
         }
     }
 }

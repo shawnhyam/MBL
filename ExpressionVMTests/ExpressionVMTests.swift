@@ -33,7 +33,8 @@ class ExpressionVMTests: XCTestCase {
             ( "(if (= 3 4) #f #t)", true ),
             ( "(begin 3 4)", 4 ),
             ( "(= (= 2 2) (= #t #t))", true ),
-            ( "(time)", 2 )
+            ( "(time)", 0 ),
+            ( "((lambda (f) (f 3)) (lambda (x) x))", 3)
         ]
         
         for (str, value) in tests {

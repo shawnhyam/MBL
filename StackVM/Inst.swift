@@ -7,6 +7,14 @@
 
 import Foundation
 
+public typealias Label = Int
+
+public enum Addr: Equatable {
+    case label(Label)
+    case abs(Int)
+    case rel(Int)
+}
+
 public enum Inst: Equatable {
     case shift(Int, Int)
 
@@ -15,16 +23,16 @@ public enum Inst: Equatable {
     case referLocal(Int, String)
     case referFree(Int)
     case constant(Value)
-    case close(Int, addr: Int) //CodeAddr)
-    case test(addr: Int) //CodeAddr)
+    case close(Int, addr: Addr) //CodeAddr)
+    case test(addr: Addr) //CodeAddr)
     //case assign(Loc)
 //    case conti(Label)
 //    case nuate(Stack, Variable)
-    case frame(addr: Int)
+    case frame(addr: Addr)
     case argument
     case apply
     case `return`(Int)
-    case jmp(addr: Int)
+    case jmp(addr: Addr)
 }
 
 
@@ -40,7 +48,7 @@ extension Inst: CustomStringConvertible {
         case let .close(count, addr): return "close(\(count)) -> \(addr)"
         case .test(_): return "test"
         //case .assign(_): return "set!"
-        case let .frame(addr): return "frame -> \(addr)"
+        case let .frame(relAddr): return "frame -> \(relAddr)"
         case .argument: return "arg"
         case .apply: return "call"
         case .return(_): return "ret"

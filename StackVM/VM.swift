@@ -30,6 +30,9 @@ public struct VM {
         switch inst {
         case .halt:
             return false
+        case .argument:
+            stack.push(acc)
+
         case let .referGlobal(idx):
             if idx == 0 {
                 acc = .sub
@@ -42,37 +45,22 @@ public struct VM {
             }
         case let .referFree(idx):
             acc = cl.values[idx]
-
+            
         case let .referLocal(idx, _):
             acc = stack[fp, idx]
         case let .constant(obj):
             acc = obj
         case let .close(freeLength, body):
-            acc = .closure(Closure(body: next + body - 1, values: (0..<freeLength).map { i in stack[stack.tos, i] }))
+            guard case let .abs(addr) = body else { fatalError() }
+            acc = .closure(Closure(body: addr, values: (0..<freeLength).map { i in stack[stack.tos, i] }))
             stack.tos -= freeLength
-        case let .test(else_):
-            if acc.isFalse {
-                next += else_ - 1
-            }
-        //next = acc.isFalse ? else_ : then
-//        case .assign(_):
-            /*
-             Implementations for languages that support first-class functions and assignments but not continuations (such as Common Lisp) can benefit from this optimization; the criteria for creating boxes is not only that a variable is assigned but also that it occurs free in some function for which a closure might be created.
-             */
-//            fatalError()
-        case let .frame(ret):
+
+        case let .frame(addr):
+            guard case let .rel(addr) = addr else { fatalError() }
             stack.push(.closure(cl))
             stack.push(.stackAddr(fp))
-            stack.push(.codeAddr(next+ret-1))
-        case .argument:
-            stack.push(acc)
-            
-        case let .shift(n, m):
-            stack.shift(n, m)
-            
-        case let .jmp(addr):
-            next = next+addr-1
-            
+            stack.push(.codeAddr(next+addr-1))
+
         case .apply:
             switch acc {
             case let .closure(closure):
@@ -124,6 +112,25 @@ public struct VM {
             default:
                 fatalError()
             }
+
+
+        case let .test(else_):
+            guard case let .rel(addr) = else_ else { fatalError() }
+            if acc.isFalse {
+                next += addr - 1
+            }
+//        case .assign(_):
+            /*
+             Implementations for languages that support first-class functions and assignments but not continuations (such as Common Lisp) can benefit from this optimization; the criteria for creating boxes is not only that a variable is assigned but also that it occurs free in some function for which a closure might be created.
+             */
+//            fatalError()
+
+        case let .shift(n, m):
+            stack.shift(n, m)
+
+        case let .jmp(addr):
+            guard case let .rel(addr) = addr else { fatalError() }
+            next = next+addr-1
         case let .return(n):
             stack.tos -= n
             guard case let .codeAddr(ret) = stack[stack.tos, 0],

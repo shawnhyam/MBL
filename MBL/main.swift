@@ -23,7 +23,8 @@ let tests: [(String, Value, Type)] = [
     ( "(if (= 3 4) #f #t)", true, .bool ),
     ( "(begin 3 4)", 4, .int ),
     ( "(= (= 2 2) (= #t #t))", true, .bool ),
-    ( "(time)", 2, .int )
+    ( "(time)", 2, .int ),
+    ( "((lambda (f) (f 3)) (lambda (x) x))", 3, .int)
 ]
 
 // ( "(letrec (f (x) (if (= x 0) 0 (f (- x 1)))) (f 3))", 0, .int )
@@ -51,4 +52,5 @@ for (str, value, type) in tests {
         
     }
     print(value == vm.acc, vm.acc)
+    assert(value == vm.acc)
 }
