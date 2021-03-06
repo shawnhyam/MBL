@@ -36,6 +36,12 @@
 		2D84741E25F19CE1005E035E /* Expression.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8473B525F19A2D005E035E /* Expression.framework */; };
 		2D84741F25F19CE1005E035E /* Expression.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8473B525F19A2D005E035E /* Expression.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2D84742825F2888D005E035E /* TailCall.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D84742725F2888D005E035E /* TailCall.swift */; };
+		2D84743B25F30420005E035E /* ForthVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D84743225F30420005E035E /* ForthVM.framework */; };
+		2D84744025F30420005E035E /* ForthVMTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D84743F25F30420005E035E /* ForthVMTests.swift */; };
+		2D84744225F30420005E035E /* ForthVM.h in Headers */ = {isa = PBXBuildFile; fileRef = 2D84743425F30420005E035E /* ForthVM.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		2D84744F25F30429005E035E /* Expression.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8473B525F19A2D005E035E /* Expression.framework */; };
+		2D84745025F30429005E035E /* Expression.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8473B525F19A2D005E035E /* Expression.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2D84745A25F3043E005E035E /* ForthVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D84745925F3043E005E035E /* ForthVM.swift */; };
 		2DEAF87125EDC2E80033CA28 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DEAF87025EDC2E80033CA28 /* main.swift */; };
 		2DEAF88425EDC3FF0033CA28 /* Tagged in Frameworks */ = {isa = PBXBuildFile; productRef = 2DEAF88325EDC3FF0033CA28 /* Tagged */; };
 		2DEAF88E25EDC4500033CA28 /* Unify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DEAF88D25EDC4500033CA28 /* Unify.swift */; };
@@ -100,6 +106,20 @@
 			remoteGlobalIDString = 2D8473B425F19A2D005E035E;
 			remoteInfo = Expression;
 		};
+		2D84743C25F30420005E035E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2DEAF86525EDC2E80033CA28 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2D84743125F30420005E035E;
+			remoteInfo = ForthVM;
+		};
+		2D84745125F30429005E035E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2DEAF86525EDC2E80033CA28 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 2D8473B425F19A2D005E035E;
+			remoteInfo = Expression;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -138,6 +158,17 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2D84745325F30429005E035E /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				2D84745025F30429005E035E /* Expression.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2DEAF86B25EDC2E80033CA28 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -170,6 +201,13 @@
 		2D8473FD25F19C96005E035E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2D84740A25F19CA4005E035E /* ExprVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExprVM.swift; sourceTree = "<group>"; };
 		2D84742725F2888D005E035E /* TailCall.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TailCall.swift; sourceTree = "<group>"; };
+		2D84743225F30420005E035E /* ForthVM.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ForthVM.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D84743425F30420005E035E /* ForthVM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ForthVM.h; sourceTree = "<group>"; };
+		2D84743525F30420005E035E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2D84743A25F30420005E035E /* ForthVMTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ForthVMTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D84743F25F30420005E035E /* ForthVMTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForthVMTests.swift; sourceTree = "<group>"; };
+		2D84744125F30420005E035E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2D84745925F3043E005E035E /* ForthVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForthVM.swift; sourceTree = "<group>"; };
 		2DEAF86D25EDC2E80033CA28 /* MBL */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MBL; sourceTree = BUILT_PRODUCTS_DIR; };
 		2DEAF87025EDC2E80033CA28 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		2DEAF87825EDC31A0033CA28 /* Expr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expr.swift; sourceTree = "<group>"; };
@@ -230,6 +268,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				2D8473F725F19C96005E035E /* ExpressionVM.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2D84742F25F30420005E035E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2D84744F25F30429005E035E /* Expression.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2D84743725F30420005E035E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2D84743B25F30420005E035E /* ForthVM.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -318,6 +372,25 @@
 			path = ExpressionVMTests;
 			sourceTree = "<group>";
 		};
+		2D84743325F30420005E035E /* ForthVM */ = {
+			isa = PBXGroup;
+			children = (
+				2D84743425F30420005E035E /* ForthVM.h */,
+				2D84745925F3043E005E035E /* ForthVM.swift */,
+				2D84743525F30420005E035E /* Info.plist */,
+			);
+			path = ForthVM;
+			sourceTree = "<group>";
+		};
+		2D84743E25F30420005E035E /* ForthVMTests */ = {
+			isa = PBXGroup;
+			children = (
+				2D84743F25F30420005E035E /* ForthVMTests.swift */,
+				2D84744125F30420005E035E /* Info.plist */,
+			);
+			path = ForthVMTests;
+			sourceTree = "<group>";
+		};
 		2DEAF86425EDC2E80033CA28 = {
 			isa = PBXGroup;
 			children = (
@@ -328,6 +401,8 @@
 				2D8473C125F19A2D005E035E /* ExpressionTests */,
 				2D8473EF25F19C96005E035E /* ExpressionVM */,
 				2D8473FA25F19C96005E035E /* ExpressionVMTests */,
+				2D84743325F30420005E035E /* ForthVM */,
+				2D84743E25F30420005E035E /* ForthVMTests */,
 				2DEAF86E25EDC2E80033CA28 /* Products */,
 				2D8473A825F199EB005E035E /* Frameworks */,
 			);
@@ -343,6 +418,8 @@
 				2D8473BD25F19A2D005E035E /* ExpressionTests.xctest */,
 				2D8473EE25F19C96005E035E /* ExpressionVM.framework */,
 				2D8473F625F19C96005E035E /* ExpressionVMTests.xctest */,
+				2D84743225F30420005E035E /* ForthVM.framework */,
+				2D84743A25F30420005E035E /* ForthVMTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -390,6 +467,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				2D8473FE25F19C96005E035E /* ExpressionVM.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2D84742D25F30420005E035E /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2D84744225F30420005E035E /* ForthVM.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -508,6 +593,44 @@
 			productReference = 2D8473F625F19C96005E035E /* ExpressionVMTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		2D84743125F30420005E035E /* ForthVM */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2D84744325F30420005E035E /* Build configuration list for PBXNativeTarget "ForthVM" */;
+			buildPhases = (
+				2D84742D25F30420005E035E /* Headers */,
+				2D84742E25F30420005E035E /* Sources */,
+				2D84742F25F30420005E035E /* Frameworks */,
+				2D84743025F30420005E035E /* Resources */,
+				2D84745325F30429005E035E /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2D84745225F30429005E035E /* PBXTargetDependency */,
+			);
+			name = ForthVM;
+			productName = ForthVM;
+			productReference = 2D84743225F30420005E035E /* ForthVM.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		2D84743925F30420005E035E /* ForthVMTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2D84744625F30420005E035E /* Build configuration list for PBXNativeTarget "ForthVMTests" */;
+			buildPhases = (
+				2D84743625F30420005E035E /* Sources */,
+				2D84743725F30420005E035E /* Frameworks */,
+				2D84743825F30420005E035E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				2D84743D25F30420005E035E /* PBXTargetDependency */,
+			);
+			name = ForthVMTests;
+			productName = ForthVMTests;
+			productReference = 2D84743A25F30420005E035E /* ForthVMTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		2DEAF86C25EDC2E80033CA28 /* MBL */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2DEAF87425EDC2E80033CA28 /* Build configuration list for PBXNativeTarget "MBL" */;
@@ -560,6 +683,13 @@
 					2D8473F525F19C96005E035E = {
 						CreatedOnToolsVersion = 12.4;
 					};
+					2D84743125F30420005E035E = {
+						CreatedOnToolsVersion = 12.4;
+						LastSwiftMigration = 1240;
+					};
+					2D84743925F30420005E035E = {
+						CreatedOnToolsVersion = 12.4;
+					};
 					2DEAF86C25EDC2E80033CA28 = {
 						CreatedOnToolsVersion = 12.4;
 					};
@@ -588,6 +718,8 @@
 				2D8473BC25F19A2D005E035E /* ExpressionTests */,
 				2D8473ED25F19C96005E035E /* ExpressionVM */,
 				2D8473F525F19C96005E035E /* ExpressionVMTests */,
+				2D84743125F30420005E035E /* ForthVM */,
+				2D84743925F30420005E035E /* ForthVMTests */,
 			);
 		};
 /* End PBXProject section */
@@ -629,6 +761,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		2D8473F425F19C96005E035E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2D84743025F30420005E035E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2D84743825F30420005E035E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -693,6 +839,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		2D84742E25F30420005E035E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2D84745A25F3043E005E035E /* ForthVM.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		2D84743625F30420005E035E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2D84744025F30420005E035E /* ForthVMTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		2DEAF86925EDC2E80033CA28 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -746,6 +908,16 @@
 			isa = PBXTargetDependency;
 			target = 2D8473B425F19A2D005E035E /* Expression */;
 			targetProxy = 2D84742025F19CE1005E035E /* PBXContainerItemProxy */;
+		};
+		2D84743D25F30420005E035E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2D84743125F30420005E035E /* ForthVM */;
+			targetProxy = 2D84743C25F30420005E035E /* PBXContainerItemProxy */;
+		};
+		2D84745225F30429005E035E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 2D8473B425F19A2D005E035E /* Expression */;
+			targetProxy = 2D84745125F30429005E035E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1033,6 +1205,105 @@
 			};
 			name = Release;
 		};
+		2D84744425F30420005E035E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 2FRWKWHVQR;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = ForthVM/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				PRODUCT_BUNDLE_IDENTIFIER = tech.amarantin.ForthVM;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		2D84744525F30420005E035E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = 2FRWKWHVQR;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = ForthVM/Info.plist;
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				PRODUCT_BUNDLE_IDENTIFIER = tech.amarantin.ForthVM;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		2D84744725F30420005E035E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 2FRWKWHVQR;
+				INFOPLIST_FILE = ForthVMTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				PRODUCT_BUNDLE_IDENTIFIER = tech.amarantin.ForthVMTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		2D84744825F30420005E035E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 2FRWKWHVQR;
+				INFOPLIST_FILE = ForthVMTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 11.1;
+				PRODUCT_BUNDLE_IDENTIFIER = tech.amarantin.ForthVMTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 		2DEAF87225EDC2E80033CA28 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1223,6 +1494,24 @@
 			buildConfigurations = (
 				2D84740325F19C96005E035E /* Debug */,
 				2D84740425F19C96005E035E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2D84744325F30420005E035E /* Build configuration list for PBXNativeTarget "ForthVM" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2D84744425F30420005E035E /* Debug */,
+				2D84744525F30420005E035E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2D84744625F30420005E035E /* Build configuration list for PBXNativeTarget "ForthVMTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2D84744725F30420005E035E /* Debug */,
+				2D84744825F30420005E035E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
