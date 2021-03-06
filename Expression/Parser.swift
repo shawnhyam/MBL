@@ -128,20 +128,19 @@ public struct Parser {
 
     mutating func parseLetrec() throws -> Expr<Void> {
         // removed support for now
-        fatalError()
-//
-//        tokenizer.eat(.id("letrec"))
-//        tokenizer.eat(.lparen)
-//        let v = try parseVar()
-//
-//        tokenizer.eat(.lparen)
-//        let names = try parseVars()
-//        tokenizer.eat(.rparen)
-//
-//        let expr = try parseExpr()
-//        tokenizer.eat(.rparen)
-//        let body = try parseExpr()
-//        return .let([v], [.fix(v, .abs(names, expr, ()), ())], body, ())
+
+        tokenizer.eat(.id("letrec"))
+        tokenizer.eat(.lparen)
+        let v = try parseVar()
+
+        tokenizer.eat(.lparen)
+        let names = try parseVars()
+        tokenizer.eat(.rparen)
+
+        let expr = try parseExpr()
+        tokenizer.eat(.rparen)
+        let body = try parseExpr()
+        return .let([v], [.fix(v, names, expr, (), ())], body, ())
     }
 
     mutating func parseLambda() throws -> Expr<Void> {

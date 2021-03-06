@@ -6,22 +6,20 @@
 //
 
 import Foundation
-import Expression
 
 
-
-struct Inferencer {
-    typealias Ex = Expr<Int>
+public struct Inferencer {
+    public typealias Ex = Expr<Int>
     
     var annotations: [Int: Type] = [:]
     private var count = 0
     
-    
-    
-    
+    public init() {
+
+    }
 }
 
-extension Inferencer {
+public extension Inferencer {
     mutating func nextTypeVar() -> Type {
         defer { count += 1 }
         return .var(Type.Id(rawValue: "τ\(count)"))
@@ -204,6 +202,17 @@ extension Inferencer {
         let s = unify(cl)
         let type = annotations[e.tag]!
         return apply(s, type)
+    }
+
+    mutating func inferAll(_ e: Expr<Int>) -> [Int: Type] {
+        annotate(e)
+        let cl = collect(e)
+        let s = unify(cl)
+        var result: [Int: Type] = [:]
+        for (tag, type) in annotations {
+            result[tag] = apply(s, type)
+        }
+        return result
     }
     
 }

@@ -8,8 +8,8 @@
 import Foundation
 import Tagged
 
-indirect enum Type: Equatable {
-    typealias Id = Tagged<Type, String>
+public indirect enum Type: Equatable {
+    public typealias Id = Tagged<Type, String>
     
     case `var`(Id)
     case int
@@ -19,7 +19,7 @@ indirect enum Type: Equatable {
 
 
 extension Type: CustomStringConvertible {
-    var description: String {
+    public var description: String {
         switch self {
         case let .var(id): return id.rawValue
         case .int: return "int"

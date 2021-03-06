@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Expression
 
 extension Sequence {
     func anySatisfy(_ predicate: (Element) throws -> Bool) rethrows -> Bool {

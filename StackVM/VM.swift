@@ -14,7 +14,7 @@ public struct VM {
     public private(set) var acc: Value = .int(0)
     var next: Int = 0
     var fp: Int = 0
-    var cl: Closure = .init(body: 0, values: [])
+    var cl: Closure = .init(body: .abs(0), values: [])
     var count = 0
     
     public init(program: [Inst]) {
@@ -23,7 +23,7 @@ public struct VM {
         for (inst1, inst2) in zip(program, program[1...]) {
             switch (inst1, inst2) {
             case (.apply, .return):
-                fatalError()
+                break
             default:
                 break
             }
@@ -42,7 +42,8 @@ public struct VM {
             return false
         case .argument:
             stack.push(acc)
-
+//        case .local:
+//            stack.push(acc)
         case let .referGlobal(idx):
             if idx == 0 {
                 acc = .sub
@@ -58,23 +59,26 @@ public struct VM {
             
         case let .referLocal(idx, _):
             acc = stack[fp, idx]
+        case let .referTemp(idx, _):
+            acc = stack[fp, -(idx+1)]
+
         case let .constant(obj):
             acc = obj
         case let .close(freeLength, body):
-            guard case let .abs(addr) = body else { fatalError() }
-            acc = .closure(Closure(body: addr, values: (0..<freeLength).map { i in stack[stack.tos, i] }))
+            acc = .closure(Closure(body: body, values: (0..<freeLength).map { i in stack[stack.tos, i] }))
             stack.tos -= freeLength
 
         case let .frame(addr):
             guard case let .rel(addr) = addr else { fatalError() }
             stack.push(.closure(cl))
             stack.push(.stackAddr(fp))
-            stack.push(.codeAddr(next+addr-1))
+            stack.push(.codeAddr(.abs(next+addr-1)))
 
         case .apply:
             switch acc {
             case let .closure(closure):
-                next = closure.body
+                guard case let .abs(addr) = closure.body else { fatalError() }
+                next = addr
                 fp = stack.tos
                 cl = closure
             case .sub:
@@ -85,7 +89,8 @@ public struct VM {
                 guard case let .codeAddr(ret) = stack[stack.tos, 0],
                       case let .stackAddr(link) = stack[stack.tos, 1],
                       case let .closure(cl) = stack[stack.tos, 2] else { fatalError() }
-                next = ret
+                guard case let .abs(addr) = ret else { fatalError() }
+                next = addr
                 fp = link
                 self.cl = cl
                 stack.tos -= 3
@@ -104,7 +109,8 @@ public struct VM {
                 guard case let .codeAddr(ret) = stack[stack.tos, 0],
                       case let .stackAddr(link) = stack[stack.tos, 1],
                       case let .closure(cl) = stack[stack.tos, 2] else { fatalError() }
-                next = ret
+                guard case let .abs(addr) = ret else { fatalError() }
+                next = addr
                 fp = link
                 self.cl = cl
                 stack.tos -= 3
@@ -114,7 +120,8 @@ public struct VM {
                 guard case let .codeAddr(ret) = stack[stack.tos, 0],
                       case let .stackAddr(link) = stack[stack.tos, 1],
                       case let .closure(cl) = stack[stack.tos, 2] else { fatalError() }
-                next = ret
+                guard case let .abs(addr) = ret else { fatalError() }
+                next = addr
                 fp = link
                 self.cl = cl
                 stack.tos -= 3
@@ -141,12 +148,15 @@ public struct VM {
         case let .jmp(addr):
             guard case let .rel(addr) = addr else { fatalError() }
             next = next+addr-1
-        case let .return(n):
+        case let .pop(n):
             stack.tos -= n
+
+        case .return:
             guard case let .codeAddr(ret) = stack[stack.tos, 0],
                   case let .stackAddr(link) = stack[stack.tos, 1],
                   case let .closure(cl) = stack[stack.tos, 2] else { fatalError() }
-            next = ret
+            guard case let .abs(addr) = ret else { fatalError() }
+            next = addr
             fp = link
             self.cl = cl
             stack.tos -= 3

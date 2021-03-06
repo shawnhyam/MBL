@@ -52,9 +52,9 @@ public extension Expr {
                 return result
             }
         case let .let(_, bindings, body, _):
-            fatalError()
+            return bindings.flatMap { $0.findTailCalls() } + body.findTailCalls(nextReturn: nextReturn)
         case .fix(_, _, _, _, _):
-            fatalError()
+            return []
         case let .seq(exprs, _):
             if let expr = exprs.last {
                 return expr.findTailCalls(nextReturn: nextReturn) + exprs.dropLast().flatMap { $0.findTailCalls() }

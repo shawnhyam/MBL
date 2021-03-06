@@ -8,10 +8,10 @@
 import Foundation
 
 public struct Closure: Equatable {
-    var body: Int
+    var body: Addr
     var values: [Value]
     
-    public init(body: Int, values: [Value]) {
+    public init(body: Addr, values: [Value]) {
         self.body = body
         self.values = values
     }
@@ -19,7 +19,7 @@ public struct Closure: Equatable {
 
 public enum Value: Equatable {
     case stackAddr(Int)
-    case codeAddr(Int)
+    case codeAddr(Addr)
     case int(Int)
     case bool(Bool)
     case closure(Closure)

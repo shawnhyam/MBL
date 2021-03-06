@@ -14,20 +14,27 @@ let globals = Set<Variable>(arrayLiteral: "-", "=", "time")
 public struct CompileEnv {
     var global: [String]
     var local: [String]
+    var temp: [String]
     var free: [String]
+    var constant: [String: Value]
 
     public init(global: [String] = ["-", "=", "time"],
                 local: [String] = [],
-                free: [String] = []) {
+                temp: [String] = [],
+                free: [String] = [],
+                constant: [String: Value] = [:]) {
         self.global = global
         self.local = local
+        self.temp = temp
         self.free = free
+        self.constant = constant
     }
 }
 
 struct CompileContext {
     var dropReturn: Set<Int> = []
     var tailCall: [Int: Int] = [:]
+    var escapingClosures: Set<Int> = []
 }
 
 extension Expr where Tag == Int {
@@ -69,17 +76,25 @@ extension Expr where Tag == Int {
             return .referFree(idx)
         } else if let idx = env.global.firstIndex(of: name) {
             return .referGlobal(idx)
+        } else if let idx = env.temp.firstIndex(of: name) {
+            return .referTemp(idx, name)
+        } else if let value = env.constant[name] {
+            return .constant(value)
         } else {
             fatalError()
         }
     }
 
     public func compile(_ env: CompileEnv) -> [Inst] {
+        var inf = Inferencer()
+        let types = inf.inferAll(self)
+
         var context = CompileContext()
         for tailCall in findTailCalls() {
             context.dropReturn.insert(tailCall.abs)
             context.tailCall[tailCall.app] = tailCall.stack
         }
+        context.escapingClosures = Set(findEscapingClosures(types))
 
         var blocks: [Label: [Inst]] = [:]
         var main = _compile(context, env, &blocks) + [.halt]
@@ -96,6 +111,10 @@ extension Expr where Tag == Int {
             switch inst {
             case let .close(x, addr: .label(label)):
                 return .close(x, addr: .abs(addresses[label]!))
+            case let .constant(.closure(closure)):
+                guard case let .label(label) = closure.body else { fatalError() }
+                let addr = addresses[label]!
+                return .constant(.closure(Closure(body: .abs(addr), values: closure.values)))
             default:
                 return inst
             }
@@ -118,10 +137,14 @@ extension Expr where Tag == Int {
             let env_ = CompileEnv(local: vars, free: free)
 
             let bodyC = body._compile(context, env_, &blocks) +
-                (context.dropReturn.contains(tag) ? [] : [.return(vars.count)])
+                (context.dropReturn.contains(tag) ? [] : [.pop(vars.count), .return])
 
             let tmp = collectFree(free, env)
             let insts = [Inst.close(free.count, addr: .label(body.tag))]
+
+//            if free.count > 0 && context.escapingClosures.contains(tag) {
+//                fatalError("Right now we don't allow returning closures that capture values")
+//            }
 
             blocks[body.tag] = bodyC
             return tmp + insts
@@ -145,11 +168,20 @@ extension Expr where Tag == Int {
             }
 
         case let .let(names, bindings, body, tag):
-            // inefficient, but rewrite let into lambda and apply
-            //return Expr.app(.abs(names, body, tag), bindings, tag)._compile(context, env, &blocks)
-            fatalError()
+            assert(names.count == bindings.count)
+            // we are going to extend the current frame with more locals
+            var code: [Inst] = []
+            var env_ = env
+            for (name, binding) in zip(names, bindings) {
+                env_.temp.append(name)
+                code.append(contentsOf: binding._compile(context, env_, &blocks))
+                code.append(.argument)
+            }
 
-
+            code.append(contentsOf: body._compile(context, env_, &blocks))
+            code.append(.pop(names.count))
+            return code
+            
         case let .cond(pred, then, else_, _):
             let elseC = else_._compile(context, env, &blocks)
             let thenC = then._compile(context, env, &blocks) + [.jmp(addr: .rel(elseC.count+1))]
@@ -159,12 +191,13 @@ extension Expr where Tag == Int {
         case let .seq(exprs, _):
             return exprs.flatMap { $0._compile(context, env, &blocks) }
 
-        case let .fix(f, vars, body, _, _):
+        case let .fix(f, vars, body, t1, t2):
             let allVars = vars
             let free = Array(body.findFree(Set(allVars).union(globals)))
-            let env_ = CompileEnv(local: allVars, free: free)
+            let recurse = Closure(body: .label(body.tag), values: [])
+            let env_ = CompileEnv(local: allVars, free: free, constant: [f: .closure(recurse)])
 
-            let bodyC = body._compile(context, env_, &blocks) + [.return(allVars.count)]
+            let bodyC = body._compile(context, env_, &blocks) + [.pop(allVars.count), .return]
 
             let tmp = collectFree(free, env_)
             let insts = [Inst.close(free.count, addr: .label(body.tag))]
@@ -172,18 +205,6 @@ extension Expr where Tag == Int {
             blocks[body.tag] = bodyC
             return tmp + insts
 
-
-            fatalError()
-//            var bodyC: [Inst] = [.return(vars.count)]
-//            body.compile(env_, &bodyC)
-//
-//            let offset = program.count+1
-//            program.insert(contentsOf: bodyC, at: 0)
-//
-//            program.append(.close(free.count, addr: offset))
-//
-//            let tmp = collectFree(free, env)
-//            program.append(contentsOf: tmp)
         case .set(_, _, _):
             fatalError()
         }

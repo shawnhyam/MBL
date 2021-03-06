@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2D33E3AF25F4140600C59B54 /* AppliedLambdas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D33E3AE25F4140600C59B54 /* AppliedLambdas.swift */; };
+		2D33E3B525F416C300C59B54 /* Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DEAF89025EDC4890033CA28 /* Type.swift */; };
+		2D33E3BC25F416EC00C59B54 /* Tagged in Frameworks */ = {isa = PBXBuildFile; productRef = 2D33E3BB25F416EC00C59B54 /* Tagged */; };
+		2D33E3CC25F4174400C59B54 /* Unify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DEAF88D25EDC4500033CA28 /* Unify.swift */; };
+		2D33E3D225F4174700C59B54 /* Infer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DEAF89E25EDC9080033CA28 /* Infer.swift */; };
+		2D33E3DD25F4179800C59B54 /* EscapingClosures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D84747025F3D14C005E035E /* EscapingClosures.swift */; };
 		2D84738C25F199C5005E035E /* StackVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D84738325F199C4005E035E /* StackVM.framework */; };
 		2D84739125F199C5005E035E /* StackVMTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D84739025F199C5005E035E /* StackVMTests.swift */; };
 		2D84739325F199C5005E035E /* StackVM.h in Headers */ = {isa = PBXBuildFile; fileRef = 2D84738525F199C4005E035E /* StackVM.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -42,11 +48,9 @@
 		2D84744F25F30429005E035E /* Expression.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8473B525F19A2D005E035E /* Expression.framework */; };
 		2D84745025F30429005E035E /* Expression.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2D8473B525F19A2D005E035E /* Expression.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2D84745A25F3043E005E035E /* ForthVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D84745925F3043E005E035E /* ForthVM.swift */; };
+		2D84746A25F3D110005E035E /* Compiler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D84746925F3D110005E035E /* Compiler.swift */; };
+		2D84747825F3D1AC005E035E /* Rename.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D84747725F3D1AC005E035E /* Rename.swift */; };
 		2DEAF87125EDC2E80033CA28 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DEAF87025EDC2E80033CA28 /* main.swift */; };
-		2DEAF88425EDC3FF0033CA28 /* Tagged in Frameworks */ = {isa = PBXBuildFile; productRef = 2DEAF88325EDC3FF0033CA28 /* Tagged */; };
-		2DEAF88E25EDC4500033CA28 /* Unify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DEAF88D25EDC4500033CA28 /* Unify.swift */; };
-		2DEAF89125EDC4890033CA28 /* Type.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DEAF89025EDC4890033CA28 /* Type.swift */; };
-		2DEAF89F25EDC9080033CA28 /* Infer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DEAF89E25EDC9080033CA28 /* Infer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -181,6 +185,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2D33E3AE25F4140600C59B54 /* AppliedLambdas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppliedLambdas.swift; sourceTree = "<group>"; };
 		2D84738325F199C4005E035E /* StackVM.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StackVM.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D84738525F199C4005E035E /* StackVM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StackVM.h; sourceTree = "<group>"; };
 		2D84738625F199C4005E035E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -208,6 +213,9 @@
 		2D84743F25F30420005E035E /* ForthVMTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForthVMTests.swift; sourceTree = "<group>"; };
 		2D84744125F30420005E035E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2D84745925F3043E005E035E /* ForthVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForthVM.swift; sourceTree = "<group>"; };
+		2D84746925F3D110005E035E /* Compiler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Compiler.swift; sourceTree = "<group>"; };
+		2D84747025F3D14C005E035E /* EscapingClosures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EscapingClosures.swift; sourceTree = "<group>"; };
+		2D84747725F3D1AC005E035E /* Rename.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rename.swift; sourceTree = "<group>"; };
 		2DEAF86D25EDC2E80033CA28 /* MBL */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MBL; sourceTree = BUILT_PRODUCTS_DIR; };
 		2DEAF87025EDC2E80033CA28 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		2DEAF87825EDC31A0033CA28 /* Expr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expr.swift; sourceTree = "<group>"; };
@@ -244,6 +252,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2D33E3BC25F416EC00C59B54 /* Tagged in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -294,7 +303,6 @@
 				2D84741125F19CD7005E035E /* Expression.framework in Frameworks */,
 				2D84741525F19CD7005E035E /* ExpressionVM.framework in Frameworks */,
 				2D8473A925F199EB005E035E /* StackVM.framework in Frameworks */,
-				2DEAF88425EDC3FF0033CA28 /* Tagged in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -334,7 +342,12 @@
 		2D8473B625F19A2D005E035E /* Expression */ = {
 			isa = PBXGroup;
 			children = (
+				2DEAF89D25EDC8FB0033CA28 /* Inference */,
+				2DEAF89025EDC4890033CA28 /* Type.swift */,
 				2DEAF87825EDC31A0033CA28 /* Expr.swift */,
+				2D84747725F3D1AC005E035E /* Rename.swift */,
+				2D84747025F3D14C005E035E /* EscapingClosures.swift */,
+				2D33E3AE25F4140600C59B54 /* AppliedLambdas.swift */,
 				2D84742725F2888D005E035E /* TailCall.swift */,
 				2DEAF88725EDC42E0033CA28 /* Tokenizer.swift */,
 				2DEAF88A25EDC4350033CA28 /* Parser.swift */,
@@ -377,6 +390,7 @@
 			children = (
 				2D84743425F30420005E035E /* ForthVM.h */,
 				2D84745925F3043E005E035E /* ForthVM.swift */,
+				2D84746925F3D110005E035E /* Compiler.swift */,
 				2D84743525F30420005E035E /* Info.plist */,
 			);
 			path = ForthVM;
@@ -427,9 +441,7 @@
 		2DEAF86F25EDC2E80033CA28 /* MBL */ = {
 			isa = PBXGroup;
 			children = (
-				2DEAF89D25EDC8FB0033CA28 /* Inference */,
 				2DEAF87025EDC2E80033CA28 /* main.swift */,
-				2DEAF89025EDC4890033CA28 /* Type.swift */,
 			);
 			path = MBL;
 			sourceTree = "<group>";
@@ -533,6 +545,9 @@
 			dependencies = (
 			);
 			name = Expression;
+			packageProductDependencies = (
+				2D33E3BB25F416EC00C59B54 /* Tagged */,
+			);
 			productName = Expression;
 			productReference = 2D8473B525F19A2D005E035E /* Expression.framework */;
 			productType = "com.apple.product-type.framework";
@@ -649,7 +664,6 @@
 			);
 			name = MBL;
 			packageProductDependencies = (
-				2DEAF88325EDC3FF0033CA28 /* Tagged */,
 			);
 			productName = MBL;
 			productReference = 2DEAF86D25EDC2E80033CA28 /* MBL */;
@@ -808,9 +822,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2D33E3AF25F4140600C59B54 /* AppliedLambdas.swift in Sources */,
+				2D33E3CC25F4174400C59B54 /* Unify.swift in Sources */,
+				2D33E3D225F4174700C59B54 /* Infer.swift in Sources */,
+				2D33E3DD25F4179800C59B54 /* EscapingClosures.swift in Sources */,
 				2D8473D125F19A3B005E035E /* Parser.swift in Sources */,
 				2D8473D225F19A3B005E035E /* Expr.swift in Sources */,
 				2D8473D025F19A3B005E035E /* Tokenizer.swift in Sources */,
+				2D33E3B525F416C300C59B54 /* Type.swift in Sources */,
+				2D84747825F3D1AC005E035E /* Rename.swift in Sources */,
 				2D84742825F2888D005E035E /* TailCall.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -843,6 +863,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2D84746A25F3D110005E035E /* Compiler.swift in Sources */,
 				2D84745A25F3043E005E035E /* ForthVM.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -859,10 +880,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2DEAF89F25EDC9080033CA28 /* Infer.swift in Sources */,
-				2DEAF88E25EDC4500033CA28 /* Unify.swift in Sources */,
 				2DEAF87125EDC2E80033CA28 /* main.swift in Sources */,
-				2DEAF89125EDC4890033CA28 /* Type.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1548,7 +1566,7 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		2DEAF88325EDC3FF0033CA28 /* Tagged */ = {
+		2D33E3BB25F416EC00C59B54 /* Tagged */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2DEAF88225EDC3FF0033CA28 /* XCRemoteSwiftPackageReference "swift-tagged" */;
 			productName = Tagged;

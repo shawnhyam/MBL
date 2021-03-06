@@ -12,19 +12,24 @@ import Expression
 
 let tests: [(String, Value, Type)] = [
     ( "4" , .int(4), .int ),
-    ( "(lambda (x) x)", .closure(.init(body: 2, values: [])), .arrow([.var("τ1"), .var("τ1")]) ),
+    ( "(lambda (x) x)", .closure(.init(body: .abs(2), values: [])), .arrow([.var("τ1"), .var("τ1")]) ),
     ( "((lambda () 42))", 42, .int ),
     ( "(- (- 7 2) (- 5 4))", 4, .int ),
     ( "((lambda (n m) (- n m)) 5 3)", 2, .int ),
     ( "((lambda (y) ((lambda (x) (- x y)) 5)) 3)", 2, .int ),
     ( "(let ((x 3) (y 7)) (- y x))", 4, .int ),
+    ( "(let ((x 37)) (let ((y 14)) (let ((z 3)) (- x (- y z)))))", 26, .int ),
     ( "(= 1 1)", true, .bool ),
     ( "(if (= 3 3) #f #t)", false, .bool ),
     ( "(if (= 3 4) #f #t)", true, .bool ),
     ( "(begin 3 4)", 4, .int ),
     ( "(= (= 2 2) (= #t #t))", true, .bool ),
     ( "(time)", 2, .int ),
-    ( "((lambda (f) (f 3)) (lambda (x) x))", 3, .int)
+    ( "((lambda (x y) ((lambda (y x) (if y x 0)) x y)) #t 8)", 8, .int ),
+   // ( "((lambda (f) (f 3)) (lambda (x) x))", 3, .int),
+   // ( "(letrec (f (x) (if (= x 0) 0 (f (- x 1)))) (f 3))", 0, .int )
+//     ( "(let ((bar (fix foo (x) (if (= x 0) 0 (foo (- x 1)))))) (bar 3))", 0, .int )
+
 ]
 
 // ( "(letrec (f (x) (if (= x 0) 0 (f (- x 1)))) (f 3))", 0, .int )
@@ -40,12 +45,19 @@ for (str, value, type) in tests {
     //}
     var parser = Parser(tokenizer)
     let expr = try parser.parseExpr()
-    let taggedExpr = expr.rewriteLet().applyTags()
+        .renameVariables()
+        .rewriteAppliedLambdas()
+    
+    let taggedExpr = expr.applyTags()
     
     var inferencer = Inferencer()
     let t = inferencer.infer(taggedExpr)
     assert(t == type)
-    
+
+    var inf2 = Inferencer()
+    let types = inf2.inferAll(taggedExpr)
+    print(">>>", taggedExpr.findEscapingClosures(types).isEmpty)
+
     let program = taggedExpr.compile(CompileEnv())
     var vm = VM(program: program)
     while vm.step() {

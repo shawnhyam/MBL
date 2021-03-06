@@ -21,6 +21,7 @@ public enum Inst: Equatable {
     case halt
     case referGlobal(Int)  // could just be a constant instead?
     case referLocal(Int, String)
+    case referTemp(Int, String)
     case referFree(Int)
     case constant(Value)
     case close(Int, addr: Addr) //CodeAddr)
@@ -31,7 +32,8 @@ public enum Inst: Equatable {
     case frame(addr: Addr)
     case argument
     case apply
-    case `return`(Int)
+    case pop(Int)
+    case `return`
     case jmp(addr: Addr)
 }
 
@@ -43,6 +45,7 @@ extension Inst: CustomStringConvertible {
         case .shift: return "shift"
         case .referGlobal(_): return "gvar"
         case .referLocal(_, _): return "lvar"
+        case .referTemp(_, _): return "tvar"
         case .referFree(_): return "fvar"
         case .constant(_): return "const"
         case let .close(count, addr): return "close(\(count)) -> \(addr)"
@@ -51,7 +54,8 @@ extension Inst: CustomStringConvertible {
         case let .frame(relAddr): return "frame -> \(relAddr)"
         case .argument: return "arg"
         case .apply: return "call"
-        case .return(_): return "ret"
+        case .return: return "ret"
+        case let .pop(n): return "pop(\(n))"
         case .jmp(_): return "jmp"
         }
     }
