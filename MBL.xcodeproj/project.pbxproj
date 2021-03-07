@@ -13,6 +13,7 @@
 		2D33E3CC25F4174400C59B54 /* Unify.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DEAF88D25EDC4500033CA28 /* Unify.swift */; };
 		2D33E3D225F4174700C59B54 /* Infer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DEAF89E25EDC9080033CA28 /* Infer.swift */; };
 		2D33E3DD25F4179800C59B54 /* EscapingClosures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D84747025F3D14C005E035E /* EscapingClosures.swift */; };
+		2D33E3E425F4537400C59B54 /* FindFree.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D33E3E325F4537400C59B54 /* FindFree.swift */; };
 		2D84738C25F199C5005E035E /* StackVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D84738325F199C4005E035E /* StackVM.framework */; };
 		2D84739125F199C5005E035E /* StackVMTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D84739025F199C5005E035E /* StackVMTests.swift */; };
 		2D84739325F199C5005E035E /* StackVM.h in Headers */ = {isa = PBXBuildFile; fileRef = 2D84738525F199C4005E035E /* StackVM.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -186,6 +187,7 @@
 
 /* Begin PBXFileReference section */
 		2D33E3AE25F4140600C59B54 /* AppliedLambdas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppliedLambdas.swift; sourceTree = "<group>"; };
+		2D33E3E325F4537400C59B54 /* FindFree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindFree.swift; sourceTree = "<group>"; };
 		2D84738325F199C4005E035E /* StackVM.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = StackVM.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D84738525F199C4005E035E /* StackVM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StackVM.h; sourceTree = "<group>"; };
 		2D84738625F199C4005E035E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -346,6 +348,7 @@
 				2DEAF89025EDC4890033CA28 /* Type.swift */,
 				2DEAF87825EDC31A0033CA28 /* Expr.swift */,
 				2D84747725F3D1AC005E035E /* Rename.swift */,
+				2D33E3E325F4537400C59B54 /* FindFree.swift */,
 				2D84747025F3D14C005E035E /* EscapingClosures.swift */,
 				2D33E3AE25F4140600C59B54 /* AppliedLambdas.swift */,
 				2D84742725F2888D005E035E /* TailCall.swift */,
@@ -824,6 +827,7 @@
 			files = (
 				2D33E3AF25F4140600C59B54 /* AppliedLambdas.swift in Sources */,
 				2D33E3CC25F4174400C59B54 /* Unify.swift in Sources */,
+				2D33E3E425F4537400C59B54 /* FindFree.swift in Sources */,
 				2D33E3D225F4174700C59B54 /* Infer.swift in Sources */,
 				2D33E3DD25F4179800C59B54 /* EscapingClosures.swift in Sources */,
 				2D8473D125F19A3B005E035E /* Parser.swift in Sources */,

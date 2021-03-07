@@ -50,7 +50,7 @@ public enum AluOp: UInt16 {
     case ugte
 }
 
-public struct AluInst {
+public struct AluInst: Equatable {
     var op: AluOp
     var rToPC: Bool
     var tToN: Bool
@@ -103,12 +103,15 @@ extension AluInst {
     }
 }
 
-public enum Inst {
+public enum Inst: Equatable {
     case literal(UInt16)
     case jmp(UInt16)
     case cjmp(UInt16)
     case call(UInt16)
     case alu(AluInst)
+
+    case addrOf(String)
+    case invoke(String)
 
     init(_ rawValue: UInt16) {
         if (rawValue & 0x8000) != 0 {
@@ -146,11 +149,32 @@ public enum Inst {
 
     static var drop = Inst.alu(.init(op: .n, rToPC: false, tToN: false, tToR: false, nToAddrOfT: false, rStack: 0, dStack: -1))
 
+    static var swap = Inst.alu(.init(op: .n, rToPC: false, tToN: true, tToR: false, nToAddrOfT: false, rStack: 0, dStack: 0))
+
 }
 
 extension Inst: ExpressibleByIntegerLiteral {
     public init(integerLiteral value: UInt16) {
         self = .literal(value & 0x7fff)
+    }
+}
+
+extension Inst: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .add: return "+"
+        case .neg: return "neg"
+        case .dup: return "dup"
+        case .store: return "!"
+        case .fetch: return "@"
+        case .drop: return "drop"
+        case .swap: return "swap"
+        case let .literal(v): return "\(v)"
+
+        default:
+
+            return "???"
+        }
     }
 }
 
@@ -162,8 +186,12 @@ public struct ForthVM {
     var pc: UInt16 = 0
     //var d: Int = 0
 
-    mutating func step() {
-        let inst = Inst(mem[Int(pc)])
+    mutating func step() -> Bool {
+        let m = mem[Int(pc)]
+        if m & 0x1000 != 0 {
+            return false
+        }
+        let inst = Inst(m)
         pc += 1
 
         switch inst {
@@ -192,7 +220,7 @@ public struct ForthVM {
             case .t: t_ = t
             case .n: t_ = n
             case .add: t_ = t &+ n
-            case .not: t_ = ~t
+            case .not: t_ = ~t+1
             case .fetch: t_ = mem[Int(t)]
             default:
                 fatalError()
@@ -211,10 +239,14 @@ public struct ForthVM {
                 fatalError()
             }
 
+            if aluInst.tToN {
+                dStack[dStack.count-2] = t
+            }
 
         default:
             fatalError()
         }
 
+        return true
     }
 }
