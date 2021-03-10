@@ -20,7 +20,24 @@ public struct Parser {
     public init(_ tokenizer: Tokenizer) {
         self.tokenizer = tokenizer
     }
- 
+
+    public mutating func parse() throws -> Expr<Void> {
+        var exprs: [Expr<Void>] = []
+
+        while true {
+            switch tokenizer.peek() {
+            case .failure(.endOfInput):
+                return .seq(exprs, ())
+            case .failure(_):
+                fatalError()
+            case .success(_):
+                exprs.append(try parseExpr())
+            }
+        }
+
+
+    }
+
     public mutating func parseExpr() throws -> Expr<Void> {
         switch tokenizer.peek() {
         case let .failure(error):
@@ -65,6 +82,8 @@ public struct Parser {
                 return try parseSequence()
             } else if token == .id("fix") {
                 return try parseFix()
+            } else if token == .id("set!") {
+                return try parseSet()
             } else {
                 var exprs: [Expr<Void>] = []
                 while tokenizer.peek() != .success(.rparen) {
@@ -115,6 +134,13 @@ public struct Parser {
         return .let(vars, bindings, body, ())
     }
 
+    mutating func parseSet() throws -> Expr<Void> {
+        tokenizer.eat(.id("set!"))
+        let name = try parseVar()
+        let body = try parseExpr()
+        return .set(name, body, ())
+    }
+
     mutating func parseFix() throws -> Expr<Void> {
         tokenizer.eat(.id("fix"))
         let name = try parseVar()
@@ -127,20 +153,23 @@ public struct Parser {
     }
 
     mutating func parseLetrec() throws -> Expr<Void> {
-        // removed support for now
-
         tokenizer.eat(.id("letrec"))
         tokenizer.eat(.lparen)
-        let v = try parseVar()
 
-        tokenizer.eat(.lparen)
-        let names = try parseVars()
-        tokenizer.eat(.rparen)
+        var vars: [Variable] = []
+        var bindings: [Expr<Void>] = []
 
-        let expr = try parseExpr()
+        while tokenizer.peek() == .success(.lparen) {
+            tokenizer.eat(.lparen)
+            vars.append(try parseVar())
+            bindings.append(try parseExpr())
+            tokenizer.eat(.rparen)
+        }
+
         tokenizer.eat(.rparen)
         let body = try parseExpr()
-        return .let([v], [.fix(v, names, expr, (), ())], body, ())
+
+        return .letrec(vars, bindings, body, ())
     }
 
     mutating func parseLambda() throws -> Expr<Void> {

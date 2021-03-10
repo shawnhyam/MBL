@@ -8,12 +8,19 @@
 import Foundation
 import Expression
 
+@propertyWrapper
+public final class Box<T> {
+    public var wrappedValue: T
+    public init(wrappedValue: T) {
+        self.wrappedValue = wrappedValue
+    }
+}
 
 
 public enum Value {
     case int(Int)
     case bool(Bool)
-    case lambda([Variable], Expr<Int>)
+    case lambda([Variable], Expr<Int>, ExprVM.Env)
     case prim0(() -> Value)
     case prim2((Value, Value) -> Value)
 }
@@ -42,24 +49,28 @@ extension Value: ExpressibleByIntegerLiteral, ExpressibleByBooleanLiteral {
 public enum ExprVM {}
 
 public extension ExprVM {
-    typealias Env = [[Variable: Value]]
+    typealias Env = [[Variable: Box<Value>]]
 
     static let globalEnv: Env = [
         [
-            "time": .prim0 {
+            "time": Box(wrappedValue: .prim0 {
                 return .int(0)
-            },
-            "-": .prim2({ x, y in
+            }),
+            "-": Box(wrappedValue: .prim2({ x, y in
                 guard case let .int(arg0) = x, case let .int(arg1) = y else { fatalError() }
                 return .int(arg0 - arg1)
-            }),
-            "=": .prim2({ x, y in
+            })),
+            "*": Box(wrappedValue: .prim2({ x, y in
+                guard case let .int(arg0) = x, case let .int(arg1) = y else { fatalError() }
+                return .int(arg0 * arg1)
+            })),
+            "=": Box(wrappedValue: .prim2({ x, y in
                 switch (x, y) {
                 case let (.int(arg0), .int(arg1)): return .bool(arg0 == arg1)
                 case let (.bool(arg0), .bool(arg1)): return .bool(arg0 == arg1)
                 default: fatalError()
                 }
-            }),
+            })),
 
         ]
     ]
@@ -74,24 +85,24 @@ public extension ExprVM {
         case let .app(fn, args, _):
             let fnVal = eval(fn, env)
             let argVals = args.map { eval($0, env) }
-            return apply(fnVal, argVals, env)
+            return apply(fnVal, argVals)
 
         case let .abs(vars, body, _):
-            return .lambda(vars, body)
+            return .lambda(vars, body, env)
 
         case let .var(name, _):
             for frame in env.reversed() {
                 if let value = frame[name] {
-                    return value
+                    return value.wrappedValue
                 }
             }
             fatalError()
 
         case let .let(vars, bindings, body, _):
             assert(vars.count ==  bindings.count)
-            var frame = [Variable: Value]()
+            var frame = [Variable: Box<Value>]()
             for (v, binding) in zip(vars, bindings) {
-                frame[v] = eval(binding, env)
+                frame[v] = Box(wrappedValue: eval(binding, env))
             }
             var env_ = env
             env_.append(frame)
@@ -112,18 +123,27 @@ public extension ExprVM {
             }
             return result
 
+        case let .fix(f, vars, body, _, _):
+            let frame: [Variable: Box<Value>] = [f: Box(wrappedValue: 0)]
+            var env_ = env
+            env_.append(frame)
+
+            let lambda = Value.lambda(vars, body, env_)
+            frame[f]?.wrappedValue = lambda
+            return lambda
+
         default:
             fatalError()
         }
     }
 
-    static func apply(_ fn: Value, _ args: [Value], _ env: Env) -> Value {
+    static func apply(_ fn: Value, _ args: [Value]) -> Value {
         switch fn {
-        case let .lambda(vars, body):
+        case let .lambda(vars, body, env):
             assert(args.count == vars.count)
-            var frame = [Variable: Value]()
+            var frame = [Variable: Box<Value>]()
             for (v, arg) in zip(vars, args) {
-                frame[v] = arg
+                frame[v] = Box(wrappedValue: arg)
             }
             var env_ = env
             env_.append(frame)

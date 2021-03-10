@@ -61,8 +61,8 @@ public struct AluInst: Equatable {
 
     var machineCode: UInt16 {
         var result: UInt16 = 0
-        if rToPC { result |= 0x1000 }
         result |= (op.rawValue << 8)
+        if rToPC { result |= 0x1000 }
         if tToN { result |= 0x80 }
         if tToR { result |= 0x40 }
         if nToAddrOfT { result |= 0x20 }
@@ -111,13 +111,16 @@ public enum Inst: Equatable {
     case alu(AluInst)
 
     case addrOf(String)
-    case invoke(String)
+    //case invoke(String)
+    case icall
 
     init(_ rawValue: UInt16) {
         if (rawValue & 0x8000) != 0 {
             self = .literal(rawValue & 0x7fff)
-        } else if (rawValue & 0x6000) == 0x6000 {
+        } else if (rawValue & 0xe000) == 0x6000 {
             self = .alu(AluInst(rawValue))
+        } else if (rawValue & 0xe000) == 0x4000 {
+            self = .call(rawValue & 0x1fff)
         } else {
             fatalError()
         }
@@ -129,6 +132,8 @@ public enum Inst: Equatable {
             return 0x8000 | v
         case let .alu(aluInst):
             return 0x6000 | aluInst.machineCode
+        case let .call(addr):
+            return 0x4000 | (addr & 0x1fff)
         default:
             fatalError()
         }
@@ -151,6 +156,9 @@ public enum Inst: Equatable {
 
     static var swap = Inst.alu(.init(op: .n, rToPC: false, tToN: true, tToR: false, nToAddrOfT: false, rStack: 0, dStack: 0))
 
+    static var ret = Inst.alu(.init(op: .t, rToPC: true, tToN: false, tToR: false, nToAddrOfT: false, rStack: -1, dStack: 0))
+
+
 }
 
 extension Inst: ExpressibleByIntegerLiteral {
@@ -169,11 +177,20 @@ extension Inst: CustomStringConvertible {
         case .fetch: return "@"
         case .drop: return "drop"
         case .swap: return "swap"
+        case .ret: return ";"
         case let .literal(v): return "\(v)"
-
-        default:
-
-            return "???"
+        case .jmp(_):
+            return "jmp"
+        case .cjmp(_):
+            return "cjmp"
+        case let .call(addr):
+            return "call(\(addr))"
+        case .alu(_):
+            return "alu"
+        case .addrOf(_):
+            return "addrOf"
+        case .icall:
+            return "icall"
         }
     }
 }
@@ -186,12 +203,17 @@ public struct ForthVM {
     var pc: UInt16 = 0
     //var d: Int = 0
 
+    init(program: [Int: [Inst]]) {
+        for (base, insts) in program {
+            insts.map { $0.machineCode }.enumerated().forEach { idx, code in mem[base+idx] = code }
+        }
+    }
+
     mutating func step() -> Bool {
         let m = mem[Int(pc)]
-        if m & 0x1000 != 0 {
-            return false
-        }
         let inst = Inst(m)
+        if inst == .literal(0x1337) { return false }
+        print(pc, inst)
         pc += 1
 
         switch inst {
@@ -235,6 +257,19 @@ public struct ForthVM {
                 if dStack.count > 0 {
                     dStack[dStack.count-1] = t_
                 }
+            default:
+                fatalError()
+            }
+
+            if aluInst.rToPC {
+                pc = rStack.last!
+            }
+
+            switch aluInst.rStack {
+            case 0: break
+            case 1: rStack.append(t)
+            case -1:
+                rStack.removeLast()
             default:
                 fatalError()
             }

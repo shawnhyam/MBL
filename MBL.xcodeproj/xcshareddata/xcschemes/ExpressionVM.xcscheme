@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2DEAF86C25EDC2E80033CA28"
-               BuildableName = "MBL"
-               BlueprintName = "MBL"
+               BlueprintIdentifier = "2D8473ED25F19C96005E035E"
+               BuildableName = "ExpressionVM.framework"
+               BlueprintName = "ExpressionVM"
                ReferencedContainer = "container:MBL.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -28,36 +28,6 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2D8473BC25F19A2D005E035E"
-               BuildableName = "ExpressionTests.xctest"
-               BlueprintName = "ExpressionTests"
-               ReferencedContainer = "container:MBL.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2D84738A25F199C5005E035E"
-               BuildableName = "StackVMTests.xctest"
-               BlueprintName = "StackVMTests"
-               ReferencedContainer = "container:MBL.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "2D84743925F30420005E035E"
-               BuildableName = "ForthVMTests.xctest"
-               BlueprintName = "ForthVMTests"
-               ReferencedContainer = "container:MBL.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
          <TestableReference
             skipped = "NO">
             <BuildableReference
@@ -80,16 +50,6 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "2DEAF86C25EDC2E80033CA28"
-            BuildableName = "MBL"
-            BlueprintName = "MBL"
-            ReferencedContainer = "container:MBL.xcodeproj">
-         </BuildableReference>
-      </BuildableProductRunnable>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -97,16 +57,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "2DEAF86C25EDC2E80033CA28"
-            BuildableName = "MBL"
-            BlueprintName = "MBL"
+            BlueprintIdentifier = "2D8473ED25F19C96005E035E"
+            BuildableName = "ExpressionVM.framework"
+            BlueprintName = "ExpressionVM"
             ReferencedContainer = "container:MBL.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

@@ -37,7 +37,7 @@ public struct Tokenizer {
     }
     
     let startIdChars = CharacterSet.letters.union(CharacterSet(charactersIn: "-'*="))
-    let idChars = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "-'*="))
+    let idChars = CharacterSet.alphanumerics.union(CharacterSet(charactersIn: "-'*=!"))
     
     func peek() -> Result<Token, TokError> {
         return token!

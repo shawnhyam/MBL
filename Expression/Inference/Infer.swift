@@ -123,6 +123,16 @@ public extension Inferencer {
                 annotations[tag] = type
                 return type
                 
+            case let .letrec(names, bindings, body, tag):
+                let bindingTypes = zip(names, bindings.map { annotate_($0, bv) })
+                var bv_ = bv
+                bv_.append(contentsOf: bindingTypes)
+
+                let type = annotate_(body, bv_)
+
+                annotations[tag] = type
+                return type
+
             case let .app(fn, args, tag):
                 annotate_(fn, bv)
                 args.forEach { annotate_($0, bv) }
@@ -141,8 +151,16 @@ public extension Inferencer {
             case .lit(_, _):
                 fatalError()
                 
-            case .set(_, _, _):
-                fatalError()
+            case let .set(name, body, tag):
+                let type = nextTypeVar()
+                annotations[tag] = type
+
+                var bv_ = bv
+                bv_.append((name, type))
+
+                annotate_(body, bv_)
+                return type
+
                 
             case let .seq(exprs, tag):
                 exprs.forEach { annotate_($0, bv) }
@@ -190,6 +208,9 @@ public extension Inferencer {
             
         case let .seq(exprs, _):
             return exprs.flatMap { collect($0) }
+
+        case let .set(_, body, tag):
+            return collect(body) + [(annotations[tag]!, annotations[body.tag]!)]
         default:
             fatalError()
         }

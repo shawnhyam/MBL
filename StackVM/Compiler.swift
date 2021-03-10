@@ -158,6 +158,9 @@ extension Expr where Tag == Int {
             code.append(contentsOf: body._compile(context, env_, &blocks))
             code.append(.pop(names.count))
             return code
+
+        case .letrec:
+            fatalError()
             
         case let .cond(pred, then, else_, _):
             let elseC = else_._compile(context, env, &blocks)

@@ -24,6 +24,8 @@ public extension Expr {
             return fn.findFree(bound).union(args.reduce(Set()) { acc, arg in acc.union(arg.findFree(bound)) })
         case .let(_, _, _, _):
             fatalError()
+        case .letrec(_, _, _, _):
+            fatalError()
         case .seq(_, _):
             fatalError()
         case let .fix(f, vars, body, _, _):

@@ -53,6 +53,8 @@ public extension Expr {
             }
         case let .let(_, bindings, body, _):
             return bindings.flatMap { $0.findTailCalls() } + body.findTailCalls(nextReturn: nextReturn)
+        case let .letrec(_, bindings, body, _):
+            return bindings.flatMap { $0.findTailCalls() } + body.findTailCalls(nextReturn: nextReturn)
         case .fix(_, _, _, _, _):
             return []
         case let .seq(exprs, _):
