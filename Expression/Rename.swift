@@ -59,6 +59,19 @@ private extension Expr {
                         body.renameVariables(env_, &n),
                         tag)
 
+        case let .letrec(vars, bindings, body, tag):
+            var env_ = env
+            var frame = [String: String]()
+            for v in vars {
+                frame[v] = "\(v).\(n)"
+                n += 1
+            }
+            env_.frames.append(frame)
+            return .letrec(vars.map { frame[$0]! },
+                           bindings.map { $0.renameVariables(env_, &n) },
+                           body.renameVariables(env_, &n),
+                           tag)
+
         case let .cond(test, then, else_, tag):
             return .cond(test.renameVariables(env, &n),
                          then.renameVariables(env, &n),

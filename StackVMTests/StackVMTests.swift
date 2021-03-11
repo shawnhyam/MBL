@@ -6,27 +6,23 @@
 //
 
 import XCTest
+import Expression
 @testable import StackVM
 
 class StackVMTests: XCTestCase {
+    func testSamples() throws {
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
+        for (str, _, value) in createSamples(Value.init(integerLiteral:), Value.init(booleanLiteral:)) {
+            let tokenizer = Tokenizer(str[...])
+            var parser = Parser(tokenizer)
+            let expr = try parser.parse()
+            let program = expr.compile(CompileEnv())
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
+            var vm = VM(program: program)
+            while vm.step() {
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+            }
+            XCTAssertEqual(value, vm.acc, str)
         }
     }
 

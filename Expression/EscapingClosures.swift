@@ -39,6 +39,9 @@ public extension Expr where Tag: Hashable {
         case let .seq(exprs, _):
             return esc + exprs.flatMap { $0.findEscapingClosures(types) }
 
+        case let .fix(_, _, body, _, _):
+            return esc + body.findEscapingClosures(types)
+
         default:
             fatalError()
         }

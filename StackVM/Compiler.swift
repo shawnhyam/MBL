@@ -9,16 +9,21 @@ import Foundation
 import Expression
 
 
-let globals = Set<Variable>(arrayLiteral: "-", "=", "time")
-
 public struct CompileEnv {
+    public static let globals = [
+        ("-", Value.prim2(.sub)),
+        ("=", .eq) ,
+        ("time", .time),
+        ("*", .prim2(.mul))
+    ]
+
     var global: [String]
     var local: [String]
     var temp: [String]
     var free: [String]
     var constant: [String: Value]
 
-    public init(global: [String] = ["-", "=", "time"],
+    public init(global: [String] = Self.globals.map { $0.0 },
                 local: [String] = [],
                 temp: [String] = [],
                 free: [String] = [],
@@ -110,7 +115,7 @@ extension Expr where Tag == Int {
             return [compileRefer(name, env)]
 
         case let .abs(vars, body, tag):
-            let free = Array(body.findFree(Set(vars).union(globals)))
+            let free = Array(body.findFree(Set(vars).union(env.global)))
             let env_ = CompileEnv(local: vars, free: free)
 
             let bodyC = body._compile(context, env_, &blocks) +
@@ -173,7 +178,7 @@ extension Expr where Tag == Int {
 
         case let .fix(f, vars, body, t1, t2):
             let allVars = vars
-            let free = Array(body.findFree(Set(allVars).union(globals)))
+            let free = Array(body.findFree(Set(allVars).union(env.global).union([f])))
             let recurse = Closure(body: .label(body.tag), values: [])
             let env_ = CompileEnv(local: allVars, free: free, constant: [f: .closure(recurse)])
 

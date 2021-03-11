@@ -219,6 +219,7 @@ extension Expr where Tag == Int {
             let testC = test._compile(&context, &env, &blocks)
             let thenC = then._compile(&context, &env, &blocks)
             let elseC = else_._compile(&context, &env, &blocks)
+            //return testC + [.cjmp(<#T##UInt16#>)]
             fatalError()
 
         default:

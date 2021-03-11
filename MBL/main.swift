@@ -44,21 +44,17 @@ for (str, value, type) in tests {
     //    print(token)
     //}
     var parser = Parser(tokenizer)
-    let expr = try parser.parseExpr()
-        .renameVariables()
-        .rewriteAppliedLambdas()
-    
-    let taggedExpr = expr.applyTags()
-    
+    let expr = try parser.parse()
+
     var inferencer = Inferencer()
-    let t = inferencer.infer(taggedExpr)
+    let t = inferencer.infer(expr)
     assert(t == type)
 
     var inf2 = Inferencer()
-    let types = inf2.inferAll(taggedExpr)
-    print(">>>", taggedExpr.findEscapingClosures(types).isEmpty)
+    let types = inf2.inferAll(expr)
+    print(">>>", expr.findEscapingClosures(types).isEmpty)
 
-    let program = taggedExpr.compile(CompileEnv())
+    let program = expr.compile(CompileEnv())
     var vm = VM(program: program)
     while vm.step() {
         

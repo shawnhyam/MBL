@@ -16,11 +16,9 @@ class ExpressionTests: XCTestCase {
             let tokenizer = Tokenizer(str[...])
             var parser = Parser(tokenizer)
             let expr = try parser.parse()
-                .fixLetrec()
-            let taggedExpr = expr.applyTags()
 
             var inferencer = Inferencer()
-            let t = inferencer.infer(taggedExpr)
+            let t = inferencer.infer(expr)
             XCTAssertEqual(t, type, "Failed: \(str)")
 
         }

@@ -21,24 +21,27 @@ public struct Parser {
         self.tokenizer = tokenizer
     }
 
-    public mutating func parse() throws -> Expr<Void> {
-        var exprs: [Expr<Void>] = []
-
-        while true {
-            switch tokenizer.peek() {
-            case .failure(.endOfInput):
-                return .seq(exprs, ())
-            case .failure(_):
-                fatalError()
-            case .success(_):
-                exprs.append(try parseExpr())
-            }
-        }
-
-
+    public mutating func parse() throws -> Expr<Int> {
+//        var exprs: [Expr<Void>] = []
+//
+//        while true {
+//            switch tokenizer.peek() {
+//            case .failure(.endOfInput):
+//                return .seq(exprs, ())
+//            case .failure(_):
+//                fatalError()
+//            case .success(_):
+//                exprs.append(try parseExpr())
+//            }
+//        }
+        return try parseExpr()
+            .renameVariables()
+            .rewriteAppliedLambdas()
+            .fixLetrec()
+            .applyTags()
     }
 
-    public mutating func parseExpr() throws -> Expr<Void> {
+    mutating func parseExpr() throws -> Expr<Void> {
         switch tokenizer.peek() {
         case let .failure(error):
             fatalError()

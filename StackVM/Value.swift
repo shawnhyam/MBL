@@ -17,13 +17,32 @@ public struct Closure: Equatable {
     }
 }
 
+public enum BinOp: Equatable {
+    case sub
+    case mul
+
+    func run(_ arg0: Value, _ arg1: Value) -> Value {
+        switch self {
+        case .sub:
+            guard case let .int(arg0) = arg0,
+                  case let .int(arg1) = arg1 else { fatalError() }
+            return .int(arg0 - arg1)
+
+        case .mul:
+            guard case let .int(arg0) = arg0,
+                  case let .int(arg1) = arg1 else { fatalError() }
+            return .int(arg0 * arg1)
+        }
+    }
+}
+
 public enum Value: Equatable {
     case stackAddr(Int)
     case codeAddr(Addr)
     case int(Int)
     case bool(Bool)
     case closure(Closure)
-    case sub
+    case prim2(BinOp)
     case eq
     case time
     

@@ -10,6 +10,7 @@ import Foundation
 public struct VM {
     let program: [Inst]
     var stack: Stack = Stack()
+    let globals: [Value]
 
     public private(set) var acc: Value = .int(0)
     var next: Int = 0
@@ -19,6 +20,7 @@ public struct VM {
     
     public init(program: [Inst]) {
         self.program = program
+        self.globals = CompileEnv.globals.map { $0.1 }
 
         for (inst1, inst2) in zip(program, program[1...]) {
             switch (inst1, inst2) {
@@ -45,15 +47,8 @@ public struct VM {
 //        case .local:
 //            stack.push(acc)
         case let .referGlobal(idx):
-            if idx == 0 {
-                acc = .sub
-            } else if idx == 1 {
-                acc = .eq
-            } else if idx == 2 {
-                acc = .time
-            } else {
-                fatalError()
-            }
+            acc = globals[idx]
+
         case let .referFree(idx):
             acc = cl.values[idx]
             
@@ -81,19 +76,6 @@ public struct VM {
                 next = addr
                 fp = stack.tos
                 cl = closure
-            case .sub:
-                guard case let .int(arg0) = stack[stack.tos, 0],
-                      case let .int(arg1) = stack[stack.tos, 1] else { fatalError() }
-                acc = .int(arg0 - arg1)
-                stack.tos -= 2
-                guard case let .codeAddr(ret) = stack[stack.tos, 0],
-                      case let .stackAddr(link) = stack[stack.tos, 1],
-                      case let .closure(cl) = stack[stack.tos, 2] else { fatalError() }
-                guard case let .abs(addr) = ret else { fatalError() }
-                next = addr
-                fp = link
-                self.cl = cl
-                stack.tos -= 3
             case .eq:
                 let arg0 = stack[stack.tos, 0]
                 let arg1 = stack[stack.tos, 1]
@@ -125,6 +107,19 @@ public struct VM {
                 fp = link
                 self.cl = cl
                 stack.tos -= 3
+
+            case let .prim2(op):
+                acc = op.run(stack[stack.tos, 0], stack[stack.tos, 1])
+                stack.tos -= 2
+                guard case let .codeAddr(ret) = stack[stack.tos, 0],
+                      case let .stackAddr(link) = stack[stack.tos, 1],
+                      case let .closure(cl) = stack[stack.tos, 2] else { fatalError() }
+                guard case let .abs(addr) = ret else { fatalError() }
+                next = addr
+                fp = link
+                self.cl = cl
+                stack.tos -= 3
+
 
             default:
                 fatalError()

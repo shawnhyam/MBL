@@ -10,26 +10,24 @@ import Expression
 @testable import ForthVM
 
 class ForthVMTests: XCTestCase {
+    func testSamples() throws {
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
+        for (str, _, value) in createSamples({ UInt16($0) }, { b in b ? UInt16(1) : 0 }) {
+            let tokenizer = Tokenizer(str[...])
+            var parser = Parser(tokenizer)
+            let expr = try parser.parse()
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
+            var env = CompileEnv()
+            let program = expr.compile(&env)
 
-    func testExample() throws {
-        //let program: [Inst] = [42, 24, .add, 3, .neg] + Inst.sub
-        //let program: [Inst] = [42, .dup, .add]
-        let program: [Int: [Inst]] = [0: [42, 13, .store, .drop, 13, .fetch]]
-
-        var machine = ForthVM(program: program)
-        //program.map { $0.machineCode }.enumerated().forEach { idx, code in machine.mem[idx] = code }
-        for _ in 0..<6 {
-            machine.step()
-            print(machine.dStack, machine.mem[13])
+            var machine = ForthVM(program: program)
+            while machine.step() {
+                // print(machine.dStack, machine.mem[13])
+            }
+            let result = machine.dStack.last!
+            XCTAssertEqual(value, result, str)
         }
+
     }
 
     func testCompiler() throws {
@@ -57,13 +55,10 @@ class ForthVMTests: XCTestCase {
             //    print(token)
             //}
             var parser = Parser(tokenizer)
-            let expr = try parser.parseExpr()
-                .renameVariables()
-                .rewriteAppliedLambdas()
-            let taggedExpr = expr.applyTags()
+            let expr = try parser.parse()
 
             var env = CompileEnv()
-            let program = taggedExpr.compile(&env)
+            let program = expr.compile(&env)
 
             var machine = ForthVM(program: program)
 //            program.map { $0.machineCode }.enumerated().forEach { idx, code in machine.mem[idx] = code }

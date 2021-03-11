@@ -24,11 +24,9 @@ class ExpressionVMTests: XCTestCase {
         for (str, _, value) in createSamples(Value.init(integerLiteral:), Value.init(booleanLiteral:)) {
             let tokenizer = Tokenizer(str[...])
             var parser = Parser(tokenizer)
-            let expr = try parser.parseExpr()
-                .fixLetrec()
-            let taggedExpr = expr.applyTags()
+            let expr = try parser.parse()
 
-            let result = ExprVM.eval(taggedExpr)
+            let result = ExprVM.eval(expr)
             
             XCTAssertEqual(value, result, str)
         }

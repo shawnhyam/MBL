@@ -19,6 +19,8 @@ public extension Expr where Tag == Void {
             return .app(fn.rewriteAppliedLambdas(), args.map { $0.rewriteAppliedLambdas() }, ())
         case let .let(vars, bindings, body, ()):
             return .let(vars, bindings.map { $0.rewriteAppliedLambdas() }, body.rewriteAppliedLambdas(), ())
+        case let .letrec(vars, bindings, body, ()):
+            return .letrec(vars, bindings.map { $0.rewriteAppliedLambdas() }, body.rewriteAppliedLambdas(), ())
         case let .cond(test, then, else_, ()):
             return .cond(test.rewriteAppliedLambdas(),
                          then.rewriteAppliedLambdas(),
