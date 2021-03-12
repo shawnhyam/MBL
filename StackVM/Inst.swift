@@ -22,7 +22,7 @@ public enum Inst: Equatable {
     case referGlobal(Int)  // could just be a constant instead?
     case referLocal(Int, String)
     case referTemp(Int, String)
-    case referFree(Int)
+    case referFree(Int, String)
     case constant(Value)
     case close(Int, addr: Addr) //CodeAddr)
     case test(addr: Addr) //CodeAddr)

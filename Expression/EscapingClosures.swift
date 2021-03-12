@@ -21,8 +21,8 @@ public extension Expr where Tag: Hashable {
 
         switch self {
         case .var, .lit: return []
-        case let .abs(_, body, _):
-            return esc + body.findEscapingClosures(types)
+        case let .abs(lam, _):
+            return esc + lam.body.findEscapingClosures(types)
 
         case let .let(_, bindings, body, _):
             return esc + bindings.flatMap { $0.findEscapingClosures(types) } + body.findEscapingClosures(types)
@@ -41,6 +41,10 @@ public extension Expr where Tag: Hashable {
 
         case let .fix(_, _, body, _, _):
             return esc + body.findEscapingClosures(types)
+
+        case let .fix2:
+            // TODO
+            return []
 
         default:
             fatalError()

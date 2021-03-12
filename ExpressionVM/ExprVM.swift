@@ -20,7 +20,7 @@ public final class Box<T> {
 public enum Value {
     case int(Int)
     case bool(Bool)
-    case lambda([Variable], Expr<Int>, ExprVM.Env)
+    case lambda(Lambda<Int>, ExprVM.Env)
     case prim0(() -> Value)
     case prim2((Value, Value) -> Value)
 }
@@ -87,8 +87,8 @@ public extension ExprVM {
             let argVals = args.map { eval($0, env) }
             return apply(fnVal, argVals)
 
-        case let .abs(vars, body, _):
-            return .lambda(vars, body, env)
+        case let .abs(lam, _):
+            return .lambda(lam, env)
 
         case let .var(name, _):
             for frame in env.reversed() {
@@ -128,7 +128,7 @@ public extension ExprVM {
             var env_ = env
             env_.append(frame)
 
-            let lambda = Value.lambda(vars, body, env_)
+            let lambda = Value.lambda(Lambda(vars: vars, body: body), env_)
             frame[f]?.wrappedValue = lambda
             return lambda
 
@@ -139,15 +139,15 @@ public extension ExprVM {
 
     static func apply(_ fn: Value, _ args: [Value]) -> Value {
         switch fn {
-        case let .lambda(vars, body, env):
-            assert(args.count == vars.count)
+        case let .lambda(lam, env):
+            assert(args.count == lam.vars.count)
             var frame = [Variable: Box<Value>]()
-            for (v, arg) in zip(vars, args) {
+            for (v, arg) in zip(lam.vars, args) {
                 frame[v] = Box(wrappedValue: arg)
             }
             var env_ = env
             env_.append(frame)
-            return eval(body, env_)
+            return eval(lam.body, env_)
         case let .prim0(fn):
             assert(args.count == 0)
             return fn()

@@ -33,15 +33,15 @@ private extension Expr {
         case .lit: return self
         case let .var(name, tag):
             return .var(env.rename(name), tag)
-        case let .abs(vars, body, tag):
+        case let .abs(lam, tag):
             var env_ = env
             var frame = [String: String]()
-            for v in vars {
+            for v in lam.vars {
                 frame[v] = "\(v).\(n)"
                 n += 1
             }
             env_.frames.append(frame)
-            return .abs(vars.map { frame[$0]! }, body.renameVariables(env_, &n), tag)
+            return .abs(Lambda(vars: lam.vars.map { frame[$0]! }, body: lam.body.renameVariables(env_, &n)), tag)
 
         case let .app(fn, args, tag):
             return .app(fn.renameVariables(env, &n), args.map { $0.renameVariables(env, &n) }, tag)
@@ -77,6 +77,24 @@ private extension Expr {
                          then.renameVariables(env, &n),
                          else_.renameVariables(env, &n),
                          tag)
+
+        case let .fix2(vars, tags, bindings, body, tag):
+            var env_ = env
+            var frame = [String: String]()
+            for v in vars {
+                frame[v] = "\(v).\(n)"
+                n += 1
+            }
+            env_.frames.append(frame)
+            return .fix2(vars.map { frame[$0]! },
+                         tags,
+                         bindings.map { $0.renameVariables(env_, &n) },
+                         body.renameVariables(env_, &n),
+                         tag)
+
+//        case let .fix2(bindings, expr, tag):
+//            return .fix2(
+//                bindings: bindings.map { }
 
         case let .seq(exprs, tag):
             return .seq(exprs.map { $0.renameVariables(env, &n) }, tag)

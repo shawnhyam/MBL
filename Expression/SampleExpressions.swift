@@ -22,6 +22,7 @@ public func createSamples<Value>(_ fn1: (Int) -> Value, _ fn2: (Bool) -> Value) 
         ( "(begin 3 4)", .int, fn1(4) ),
         ( "(= (= 2 2) (= #t #t))", .bool, fn2(true) ),
         ( "((lambda (f) (f 3)) (lambda (x) x))", .int, fn1(3) ),
+        ( "(fix ((fact (n) (if (= n 0) 1 (* n (fact (- n 1)))))) (fact 8))", .int, fn1(40320)),
         ( "(letrec ((fact (lambda (n) (if (= n 0) 1 (* n (fact (- n 1))))))) (fact 8))", .int, fn1(40320)), 
 
     ]

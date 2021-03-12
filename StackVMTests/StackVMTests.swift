@@ -12,11 +12,17 @@ import Expression
 class StackVMTests: XCTestCase {
     func testSamples() throws {
 
-        for (str, _, value) in createSamples(Value.init(integerLiteral:), Value.init(booleanLiteral:)) {
+        for (str, type, value) in createSamples(Value.init(integerLiteral:), Value.init(booleanLiteral:)) {
             let tokenizer = Tokenizer(str[...])
             var parser = Parser(tokenizer)
             let expr = try parser.parse()
+
+            var inferencer = Inferencer()
+            let t = inferencer.infer(expr)
+            XCTAssertEqual(t, type, str)
+
             let program = expr.compile(CompileEnv())
+
 
             var vm = VM(program: program)
             while vm.step() {

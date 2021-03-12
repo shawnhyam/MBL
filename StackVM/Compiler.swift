@@ -17,22 +17,34 @@ public struct CompileEnv {
         ("*", .prim2(.mul))
     ]
 
-    var global: [String]
-    var local: [String]
-    var temp: [String]
-    var free: [String]
-    var constant: [String: Value]
+    private(set) var globals: [String]
+    private(set) var locals: [String] = []
+    private(set) var temporaries: [String] = []
+    private(set) var free: [String] = []
+    private(set) var constants: [String: Value] = [:]
 
-    public init(global: [String] = Self.globals.map { $0.0 },
-                local: [String] = [],
-                temp: [String] = [],
-                free: [String] = [],
-                constant: [String: Value] = [:]) {
-        self.global = global
-        self.local = local
-        self.temp = temp
-        self.free = free
-        self.constant = constant
+    public init() {
+        self.globals = Self.globals.map { $0.0 }
+    }
+
+    public func frame(locals: [String], free: [String]) -> CompileEnv {
+        var env_ = self
+        env_.locals = locals
+        env_.temporaries = []
+        env_.free = free
+        return env_
+    }
+
+    public func extend(_ v: String) -> CompileEnv {
+        var env_ = self
+        env_.temporaries.append(v)
+        return env_
+    }
+
+    public func extend(_ name: String, _ value: Value) -> CompileEnv {
+        var env_ = self
+        env_.constants[name] = value
+        return env_
     }
 }
 
@@ -52,15 +64,15 @@ extension Expr where Tag == Int {
 
     
     func compileRefer(_ name: String, _ env: CompileEnv) -> Inst {
-        if let idx = env.local.firstIndex(of: name) {
+        if let idx = env.locals.firstIndex(of: name) {
             return .referLocal(idx, name)
+        } else if let idx = env.temporaries.firstIndex(of: name) {
+            return .referLocal(-idx-1, name)
         } else if let idx = env.free.firstIndex(of: name) {
-            return .referFree(idx)
-        } else if let idx = env.global.firstIndex(of: name) {
+            return .referFree(idx, name)
+        } else if let idx = env.globals.firstIndex(of: name) {
             return .referGlobal(idx)
-        } else if let idx = env.temp.firstIndex(of: name) {
-            return .referTemp(idx, name)
-        } else if let value = env.constant[name] {
+        } else if let value = env.constants[name] {
             return .constant(value)
         } else {
             fatalError()
@@ -114,21 +126,21 @@ extension Expr where Tag == Int {
         case let .var(name, _):
             return [compileRefer(name, env)]
 
-        case let .abs(vars, body, tag):
-            let free = Array(body.findFree(Set(vars).union(env.global)))
-            let env_ = CompileEnv(local: vars, free: free)
+        case let .abs(lam, tag):
+            let free = Array(lam.body.findFree(Set(lam.vars).union(env.globals)))
+            let env_ = env.frame(locals: lam.vars, free: free)
 
-            let bodyC = body._compile(context, env_, &blocks) +
-                (context.dropReturn.contains(tag) ? [] : [.pop(vars.count), .return])
+            let bodyC = lam.body._compile(context, env_, &blocks) +
+                (context.dropReturn.contains(tag) ? [] : [.pop(lam.vars.count), .return])
 
             let tmp = collectFree(free, env)
-            let insts = [Inst.close(free.count, addr: .label(body.tag))]
+            let insts = [Inst.close(free.count, addr: .label(lam.body.tag))]
 
 //            if free.count > 0 && context.escapingClosures.contains(tag) {
 //                fatalError("Right now we don't allow returning closures that capture values")
 //            }
 
-            blocks[body.tag] = bodyC
+            blocks[lam.body.tag] = bodyC
             return tmp + insts
 
         case let .app(fn, args, tag):
@@ -149,13 +161,13 @@ extension Expr where Tag == Int {
                 return [.frame(addr: .rel(insts.count+2))] + insts + [.apply]
             }
 
-        case let .let(names, bindings, body, tag):
+        case let .let(names, bindings, body, _):
             assert(names.count == bindings.count)
             // we are going to extend the current frame with more locals
             var code: [Inst] = []
             var env_ = env
             for (name, binding) in zip(names, bindings) {
-                env_.temp.append(name)
+                env_ = env_.extend(name)
                 code.append(contentsOf: binding._compile(context, env_, &blocks))
                 code.append(.argument)
             }
@@ -177,20 +189,80 @@ extension Expr where Tag == Int {
             return exprs.flatMap { $0._compile(context, env, &blocks) }
 
         case let .fix(f, vars, body, t1, t2):
-            let allVars = vars
-            let free = Array(body.findFree(Set(allVars).union(env.global).union([f])))
-            let recurse = Closure(body: .label(body.tag), values: [])
-            let env_ = CompileEnv(local: allVars, free: free, constant: [f: .closure(recurse)])
-
-            let bodyC = body._compile(context, env_, &blocks) + [.pop(allVars.count), .return]
-
-            let tmp = collectFree(free, env_)
-            let insts = [Inst.close(free.count, addr: .label(body.tag))]
-
-            blocks[body.tag] = bodyC
-            return tmp + insts
+//            let allVars = vars
+//            let free = Array(body.findFree(Set(allVars).union(env.globals).union([f])))
+//            let recurse = Closure(body: .label(body.tag), values: [])
+//            let env_ = CompileEnv(locals: allVars, free: free, constant: [f: .closure(recurse)])
+//
+//            let bodyC = body._compile(context, env_, &blocks) + [.pop(allVars.count), .return]
+//
+//            let tmp = collectFree(free, env_)
+//            let insts = [Inst.close(free.count, addr: .label(body.tag))]
+//
+//            blocks[body.tag] = bodyC
+//            return tmp + insts
+            fatalError()
 
         case .set(_, _, _):
+            fatalError()
+
+        case let .fix2(fs, _, bindings, body, tag):
+            let bound = Set(fs).union(env.globals)
+
+            var code: [Inst] = []
+
+            // extend the environment with the recursive functions
+            var env_ = env
+            for (f, binding) in zip(fs, bindings) {
+                guard case let .abs(lambda, _) = binding else { fatalError() }
+                let free = Array(lambda.body.findFree(Set(lambda.vars).union(env_.globals).union(fs)))
+                env_ = env.extend(f)
+                let tmp = collectFree(free, env_)
+                let insts = [Inst.close(free.count, addr: .label(lambda.body.tag))]
+                code.append(contentsOf: tmp + insts)
+                code.append(.argument)
+            }
+
+            for (f, binding) in zip(fs, bindings) {
+                guard case let .abs(lambda, _) = binding else { fatalError() }
+
+                let free = Array(lambda.body.findFree(Set(lambda.vars).union(env_.globals).union([f])))
+                var env_ = env_.frame(locals: lambda.vars, free: free)
+                env_ = env_.extend(f, .closure(Closure(body: .label(lambda.body.tag), values: [])))
+
+
+                let bodyC = lambda.body._compile(context, env_, &blocks) +
+                    (context.dropReturn.contains(tag) ? [] : [.pop(lambda.vars.count), .return])
+
+                blocks[lambda.body.tag] = bodyC
+            }
+
+            code.append(contentsOf: body._compile(context, env_, &blocks))
+            code.append(.pop(fs.count))
+            return code
+
+
+//            // create the closures for each recursive function
+//            for (f, binding) in zip(fs, bindings) {
+//                guard case let .abs(lambda, _) = binding else { fatalError() }
+//                // TODO gather free variables?
+//                let free = Array(lambda.body.findFree(Set(lambda.vars).union(env.globals).union(fs)))
+//                //let recur = Closure(body: .label(body.tag), values: free)
+//
+//            }
+//
+//            for binding in bindings {
+//                let recur = Closure(body: .label(body.tag), values: [])
+//                let env_ = CompileEnv(local: lambda.vars, free: free, constant: [f: .closure(recur)])
+//                guard case let .abs(lambda, _) = binding else { fatalError() }
+//                // FIXME should check and see if there are any free variables to collect?
+//                let bodyC = body._compile(context, env_, &blocks) + [.pop(allVars.count), .return]
+//
+//            }
+//
+            return []
+
+        default:
             fatalError()
         }
     }

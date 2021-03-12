@@ -11,10 +11,10 @@ public extension Expr where Tag == Void {
     func rewriteAppliedLambdas() -> Expr {
         switch self {
         case .lit, .var: return self
-        case let .app(.abs(vars, body, ()), args, ()):
-            return .let(vars, args.map { $0.rewriteAppliedLambdas() }, body.rewriteAppliedLambdas(), ())
-        case let .abs(vars, body, ()):
-            return .abs(vars, body.rewriteAppliedLambdas(), ())
+        case let .app(.abs(lam, ()), args, ()):
+            return .let(lam.vars, args.map { $0.rewriteAppliedLambdas() }, lam.body.rewriteAppliedLambdas(), ())
+        case let .abs(lam, ()):
+            return .abs(Lambda(vars: lam.vars, body: lam.body.rewriteAppliedLambdas()), ())
         case let .app(fn, args, ()):
             return .app(fn.rewriteAppliedLambdas(), args.map { $0.rewriteAppliedLambdas() }, ())
         case let .let(vars, bindings, body, ()):
@@ -28,6 +28,8 @@ public extension Expr where Tag == Void {
                          ())
         case let .seq(exprs, ()):
             return .seq(exprs.map { $0.rewriteAppliedLambdas() }, ())
+        case let .fix2(vars, tags, exprs, body, ()):
+            return .fix2(vars, tags, exprs.map { $0.rewriteAppliedLambdas() }, body.rewriteAppliedLambdas(), ())
         default:
             fatalError()
         }

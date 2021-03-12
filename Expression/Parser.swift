@@ -146,13 +146,27 @@ public struct Parser {
 
     mutating func parseFix() throws -> Expr<Void> {
         tokenizer.eat(.id("fix"))
-        let name = try parseVar()
         tokenizer.eat(.lparen)
-        let vars = try parseVars()
+
+        var names: [Variable] = []
+        var bindings: [Expr<Void>] = []
+
+        while tokenizer.peek() == .success(.lparen) {
+            tokenizer.eat(.lparen)
+            let f = try parseVar()
+            tokenizer.eat(.lparen)
+            let vars = try parseVars()
+            tokenizer.eat(.rparen)
+            let body = try parseExpr()
+            names.append(f)
+            bindings.append(.abs(Lambda(vars: vars, body: body), ()))
+            tokenizer.eat(.rparen)
+        }
+
         tokenizer.eat(.rparen)
         let body = try parseExpr()
-        return .fix(name, vars, body, (), ())
 
+        return .fix2(names, names.map { _ in () }, bindings, body, ())
     }
 
     mutating func parseLetrec() throws -> Expr<Void> {
@@ -183,7 +197,7 @@ public struct Parser {
         tokenizer.eat(.rparen)
         let body = try parseExpr()
         //tokenizer.eat(.rparen)
-        return .abs(vars, body, ())
+        return .abs(Lambda(vars: vars, body: body), ())
     }
     
     mutating func parseVar() throws -> Variable {

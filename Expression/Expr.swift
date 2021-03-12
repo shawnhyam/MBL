@@ -14,16 +14,31 @@ public enum Literal {
     case bool(Bool)
 }
 
+public struct Lambda<Tag> {
+    public var vars: [Variable]
+    public var body: Expr<Tag>
+
+    public init(vars: [Variable], body: Expr<Tag>) {
+        self.vars = vars
+        self.body = body
+    }
+
+    func untag() -> Lambda<Void> {
+        return .init(vars: vars, body: body.untag())
+    }
+}
+
 public indirect enum Expr<Tag> {
     case lit(Literal, Tag)
     case `var`(Variable, Tag)
     case cond(Expr, Expr, Expr, Tag)
-    case abs([Variable], Expr, Tag)
+    case abs(Lambda<Tag>, Tag)
     case set(Variable, Expr, Tag)
     case app(Expr, [Expr], Tag)
     case `let`([Variable], [Expr], Expr, Tag)
     case letrec([Variable], [Expr], Expr, Tag)
     case fix(Variable, [Variable], Expr, Tag, Tag)
+    case fix2([Variable], [Tag], [Expr], Expr, Tag)
     case seq([Expr], Tag)
 }
 
@@ -36,7 +51,7 @@ public extension Expr {
             return t
         case let .cond(_, _, _, t):
             return t
-        case let .abs(_, _, t):
+        case let .abs(_, t):
             return t
         case let .set(_, _, t):
             return t
@@ -50,6 +65,10 @@ public extension Expr {
             return t
         case let .seq(_, t):
             return t
+        case let .fix2(_, _, _, _, t):
+            return t
+        default:
+            fatalError()
         }
     }
     
@@ -61,8 +80,8 @@ public extension Expr {
             return .var(v, ())
         case let .cond(test, then, else_, _):
             return .cond(test.untag(), then.untag(), else_.untag(), ())
-        case let .abs(vars, body, _):
-            return .abs(vars, body.untag(), ())
+        case let .abs(lambda, _):
+            return .abs(Lambda(vars: lambda.vars, body: lambda.body.untag()), ())
         case let .set(v, expr, _):
             return .set(v, expr.untag(), ())
         case let .app(fn, args, _):
@@ -75,7 +94,8 @@ public extension Expr {
             return .fix(f, vars, body.untag(), (), ())
         case let .seq(exprs, _):
             return .seq(exprs.map { $0.untag() }, ())
-
+        default:
+            fatalError()
         }
     }
 }
@@ -95,8 +115,8 @@ extension Expr where Tag == Void {
             return .var(v, n)
         case let .cond(test, then, else_, ()):
             return .cond(test._tag(&n), then._tag(&n), else_._tag(&n), n)
-        case let .abs(vars, body, ()):
-            return .abs(vars, body._tag(&n), n)
+        case let .abs(lambda, ()):
+            return .abs(Lambda(vars: lambda.vars, body: lambda.body._tag(&n)), n)
         case let .set(v, expr, ()):
             return .set(v, expr._tag(&n), n)
         case let .app(fn, args, ()):
@@ -111,6 +131,14 @@ extension Expr where Tag == Void {
             return .fix(f, vars, body._tag(&n), n, m)
         case let .seq(exprs, ()):
             return .seq(exprs.map { $0._tag(&n) }, n)
+        case let .fix2(vars, tags, exprs, body, ()):
+            let tags_ = tags.map { _ -> Int in
+                defer { n += 1 }
+                return n
+            }
+            return .fix2(vars, tags_, exprs.map { $0._tag(&n) }, body._tag(&n), n)
+        default:
+            fatalError()
         }
     }
     

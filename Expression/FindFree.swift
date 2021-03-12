@@ -16,8 +16,8 @@ public extension Expr {
             return bound.contains(v) ? [] : [v]
         case let .cond(test, then, else_, _):
             return test.findFree(bound).union(then.findFree(bound)).union(else_.findFree(bound))
-        case let .abs(vars, body, _):
-            return body.findFree(bound.union(vars))
+        case let .abs(lambda, _):
+            return lambda.body.findFree(bound.union(lambda.vars))
         case .set(_, _, _):
             fatalError()
         case let .app(fn, args, _):
@@ -30,6 +30,8 @@ public extension Expr {
             fatalError()
         case let .fix(f, vars, body, _, _):
             return body.findFree(bound.union(vars + [f]))
+        default:
+            fatalError()
         }
     }
 

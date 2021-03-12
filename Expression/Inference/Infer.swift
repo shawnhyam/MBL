@@ -77,13 +77,13 @@ public extension Inferencer {
                     annotations[tag] = a
                     return a
                 }
-            case let .abs(vars, body, tag):
+            case let .abs(lam, tag):
                 // assign a new type to each variable
-                let newTypes = vars.map { ($0, nextTypeVar()) }
+                let newTypes = lam.vars.map { ($0, nextTypeVar()) }
                 var bv_ = bv
                 bv_.append(contentsOf: newTypes)
                 
-                let bodyType = annotate_(body, bv_)
+                let bodyType = annotate_(lam.body, bv_)
                 let type = Type.arrow(newTypes.map { $0.1 } + [bodyType])
                 annotations[tag] = type
                 return type
@@ -166,6 +166,21 @@ public extension Inferencer {
                 exprs.forEach { annotate_($0, bv) }
                 annotations[tag] = annotations[exprs.last!.tag]!
                 return annotations[tag]!
+
+            case let .fix2(vars, tags, bindings, body, tag):
+                var bv_ = bv
+                zip(vars, tags).forEach { (v, t) in
+                    let type = nextTypeVar()
+                    annotations[t] = type
+                    bv_.append((v, type))
+                }
+                bindings.forEach { annotate_($0, bv_) }
+                let type = annotate_(body, bv_)
+                annotations[tag] = type
+                return type
+
+            default:
+                fatalError()
             }
         }
         annotate_(e, [])
@@ -177,8 +192,8 @@ public extension Inferencer {
         switch expr {
         case .var(_, _):
             return []
-        case let .abs(_, ae, _):
-            return collect(ae)
+        case let .abs(lam, _):
+            return collect(lam.body)
             
         case let .let(_, bindings, body, tag):
             let type = annotations[tag]!
@@ -211,6 +226,14 @@ public extension Inferencer {
 
         case let .set(_, body, tag):
             return collect(body) + [(annotations[tag]!, annotations[body.tag]!)]
+
+        case let .fix2(vars, tags, exprs, body, tag):
+            return collect(body) +
+                exprs.flatMap { collect($0) } +
+                zip(exprs, tags).map { (e, t) in
+                    (annotations[t]!, annotations[e.tag]!)
+                }
+
         default:
             fatalError()
         }

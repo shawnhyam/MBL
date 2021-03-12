@@ -29,7 +29,7 @@ public struct VM {
             default:
                 break
             }
-            print(inst1, inst2)
+            //print(inst1, inst2)
         }
     }
     
@@ -44,12 +44,11 @@ public struct VM {
             return false
         case .argument:
             stack.push(acc)
-//        case .local:
-//            stack.push(acc)
+
         case let .referGlobal(idx):
             acc = globals[idx]
 
-        case let .referFree(idx):
+        case let .referFree(idx, _):
             acc = cl.values[idx]
             
         case let .referLocal(idx, _):

@@ -12,8 +12,8 @@ public extension Expr where Tag == Void {
         switch self {
         case .lit, .var:
             return self
-        case let .abs(vars, body, tag):
-            return .abs(vars, body.fixLetrec(), tag)
+        case let .abs(lam, tag):
+            return .abs(Lambda(vars: lam.vars, body: lam.body.fixLetrec()), tag)
         case let .app(fn, args, tag):
             return .app(fn.fixLetrec(), args.map { $0.fixLetrec() }, tag)
         case let .let(vars, bindings, body, ()):
@@ -23,22 +23,24 @@ public extension Expr where Tag == Void {
         case let .seq(exprs, ()):
             return .seq(exprs.map { $0.fixLetrec() }, ())
         case let .letrec(vars, bindings, body, ()):
-            var simple: [Expr] = []
-            var lambda: [Expr] = []
+            var simple: [(Variable, Expr)] = []
+            var lambda: [(Variable, Expr)] = []
 
             for (v, binding) in zip(vars, bindings) {
                 switch binding {
-                case let .abs(params, b, ()):
-                    let e = Expr.let([v], [.fix(v, params, b, (), ())], body, ())
-                    lambda.append(e)
-                    assert(lambda.count == 1)
+                case .abs:
+                    lambda.append((v, binding))
                 default:
-                    fatalError()
+                    simple.append((v, binding))
                 }
             }
             // this is an atrocity...
             assert(simple.count == 0)
-            return lambda.first!
+            return .fix2(lambda.map { $0.0 }, lambda.map { _ in () }, lambda.map { $0.1} , body, ())
+
+        case let .fix2(vars, tags, exprs, body, ()):
+            return .fix2(vars, tags, exprs.map { $0.fixLetrec() }, body.fixLetrec(), ())
+
         default:
             fatalError()
         }

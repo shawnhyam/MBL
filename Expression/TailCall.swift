@@ -12,12 +12,12 @@ public extension Expr where Tag == Void {
         switch self {
         case .lit, .var:
             return self
-        case let .abs(vars, body, tag):
-            return .abs(vars, body.rewriteLet(), tag)
+        case let .abs(lam, tag):
+            return .abs(Lambda(vars: lam.vars, body: lam.body.rewriteLet()), tag)
         case let .app(fn, args, tag):
             return .app(fn.rewriteLet(), args.map { $0.rewriteLet() }, tag)
         case let .let(vars, bindings, body, ()):
-            return Expr.app(.abs(vars, body, ()), bindings, ())
+            return Expr.app(.abs(Lambda(vars: vars, body: body), ()), bindings, ())
         case let .cond(test, then, else_, ()):
             return .cond(test.rewriteLet(), then.rewriteLet(), else_.rewriteLet(), ())
         case let .seq(exprs, ()):
@@ -38,8 +38,8 @@ public extension Expr {
             return []
         case let .cond(test, then, else_, _):
             return test.findTailCalls() + then.findTailCalls() + else_.findTailCalls(nextReturn: nextReturn)
-        case let .abs(vars, body, tag):
-            return body.findTailCalls(nextReturn: (abs: tag, stack: vars.count))
+        case let .abs(lam, tag):
+            return lam.body.findTailCalls(nextReturn: (abs: tag, stack: lam.vars.count))
         case .set(_, _, _):
             fatalError()
         case let .app(fn, args, tag):
@@ -63,6 +63,11 @@ public extension Expr {
             } else {
                 return []
             }
+        case .fix2:
+            // TODO
+            return []
+        default:
+            fatalError()
         }
     }
 }
